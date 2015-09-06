@@ -1,0 +1,107 @@
+{% set default_number_format = [0,'.',''] %}
+<table id="sps_table" class="table table-striped table-condensed table-hover table-bordered">
+    <thead>
+    <tr>
+        {% for column_key,column in columns %}
+            {% if column.getAttr('sort') %}
+                <th{% if paginator.pagination.isSorted(column.aliasDotName) %} class="sorted"{% endif %}  {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>
+                    {{ knp_pagination_sortable(paginator.pagination, column.label, column.aliasDotName) }}
+                </th>
+            {% else %}
+                <th class="sps-paginator-not-sorted" {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>{{ column.label }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    {# table body #}
+    {% for result in paginator.pagination %}
+        <tr>
+            {% for column in columns %}
+
+                {% if column.type == 'button' %}
+                    {% set value = column.getAttr('button_value') ?: 'Button' %}
+                {% else %}
+                    {% set value = attribute(result, column.method) %}
+                {% endif %}
+
+                {% if column.type == 'numeric' %}
+                    {% set num_format = column.getAttr('number_format') ?: default_number_format %}
+                    {% set value = value | number_format(num_format[0]|default(0),num_format[1]|default('.'),num_format[2]|default('')) %}
+                {% endif %}
+
+                {% if column.type == 'datetime' and value %}
+                    {% set date_format = column.getAttr('format') ?: 'Y-m-d H:i:s' %}
+                    {% set date_zone = column.getAttr('timezone') %}
+                    {% set value = value|date(date_format,date_zone) %}
+                {% endif %}
+
+                {% if column.type == 'boolean' %}
+                    {% if column.getAttr('revers') %}
+                        {% set value = value ? 'no'|trans({}, 'sps') : 'yes'|trans({}, 'sps') %}
+                    {% else %}
+                        {% set value = value ? 'yes'|trans({}, 'sps') : 'no'|trans({}, 'sps') %}
+                    {% endif %}
+                {% endif %}
+
+                {% if column.type == 'image' %}
+                    {% if value %}
+                        {% set image_root_path = column.getAttr('image_root_path') == '.' ? '' : column.getAttr('image_root_path') %}
+                        {% set value = '<img src="' ~ ( value matches '{/http/}' ? value : asset(image_root_path ~ value) ) ~ '" width="' ~ column.getAttr('image_width',null,50) ~ '" title="'~ column.getAttr('image_title',null,'Icon') ~'" alt="'~ column.getAttr('image_alt',null,'Icon') ~'" />' %}
+                    {% endif %}
+                {% endif %}
+
+                {% if column.getAttr('link') %}
+                    {% set link_rout = column.getAttr('link','route') %}
+                    {% set link_lid = column.getAttr('link','lid','id') %}
+                    {% set lid = attribute(result, link_lid) %}
+                    {% set click = column.getAttr('click')|raw %}
+                    {% set link_class = column.getAttr('link_class') %}
+                    {% set link_style = link_class ? '' : ' style="text-decoration:underline;" ' %}
+                    {% set value = '<a class="' ~ link_class ~ '"' ~ link_style ~ click ~ ' href="' ~ path(link_rout, { 'id': lid }) ~ '">' ~ value ~ '</a>' %}
+                {% endif %}
+
+                {% if column.getAttr('link_javascript') %}
+                    {% set link_javascript_class = column.getAttr('link_class') %}
+                    {% set link_javascript_lid = column.getAttr('link_javascript','lid', 'id') %}
+                    {% set jid = attribute(result, link_javascript_lid) %}
+                    {% set link_style = link_class ? '' : ' style="text-decoration:underline;" ' %}
+                    {% set value = '<a data-id="'~jid~'"' ~ link_style ~ ' class="'~link_javascript_class~'" href="javascript:void(0)">' ~ value ~ '</a>' %}
+                {% endif %}
+
+                {% if column.getAttr('transchoice') %}
+                    {% set transchoice_p = column.getAttr('transchoice_p')|default({}) %}
+                    {% set value = column.getAttr('transchoice') | transchoice(value,transchoice_p,column.getAttr('transchoice_d') ) %}
+                {% endif %}
+
+                {% if column.getAttr('zk_list') and attribute(column.getAttr('zk_list'), value) %}
+                    {% set value = attribute(column.getAttr('zk_list'), value) %}
+                {% endif %}
+
+                {% if column.getAttr('zk_split') %}
+                    {% set arr = value|split(column.getAttr('zk_split')|default(',')) %}
+                    {% if (arr|length) > 1 %}
+                        {% set value = '<a class="zk-split" title="' ~ column.getAttr('zk_split_titile') ~ '" tabindex="0" role="button" data-toggle="popover" data-placement="top" data-content="'~ value ~'" href="javascript:void(0)">' ~ arr[0] ~ ' ... (' ~ arr|length ~ ')</a>' %}
+                    {% endif %}
+                {% endif %}
+
+                {% if column.getAttr('zk_preview') %}
+                    {% set preview_length = column.getAttr('zk_preview')|default(10) %}
+                    {% set preview_more = column.getAttr('zk_preview_more')|default(' ...(more)') %}
+                    {% if (value|split(''))|length > preview_length %}
+                        {% set value = '<a class="zk-preview" title="' ~ column.getAttr('zk_preview_titile') ~ '" tabindex="0" role="button" data-toggle="popover" data-placement="top" data-content="'~ value ~'" href="javascript:void(0)">' ~ value[:preview_length] ~ preview_more ~ '</a>' %}
+                    {% endif %}
+                {% endif %}
+
+                <td{% if column.getAttr('class') %} class="{{ column.getAttr('class') }}" {% endif %} {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>
+                    {{ value | raw }}
+                </td>
+
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    <tfoot>
+    <tr>
+        <th class="text-center" colspan="{{ columns | length }}">{{ knp_pagination_render(paginator.pagination) }}</th>
+    </tr>
+    </tfoot>
+</table>

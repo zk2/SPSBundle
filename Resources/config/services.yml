@@ -1,0 +1,59 @@
+services:
+    zk2.sps.doctrine.query.builder:
+        class: Zk2\SPSBundle\Model\DoctrineQueryBuilder
+    
+    zk2.sps.doctrine.native.builder:
+        class: Zk2\SPSBundle\Model\NativeQueryBuilder
+    
+    zk2.sps.doctrine:
+        class: Zk2\SPSBundle\Model\DoctrineSPS
+        arguments:
+            - @request_stack
+            - @service_container
+            - @session
+            - @zk2.sps.doctrine.query.builder
+            - "default"
+
+    zk2.sps.doctrine.native:
+        class: Zk2\SPSBundle\Model\NativeSPS
+        arguments:
+            - @request_stack
+            - @service_container
+            - @session
+            - @zk2.sps.doctrine.native.builder
+            - "default"
+
+    zk2.sps.form_filter.session:
+        class: Zk2\SPSBundle\Model\FormFilterSession
+        arguments: [@doctrine, @session]
+
+    zk2.sps.date_bootstrap.type:     
+        class:  Zk2\SPSBundle\Form\Type\DateBootstrapType
+        arguments: [%locale%]
+        tags:
+            - { name: form.type, alias: zk2_sps_date_bootstrap_type }
+
+    zk2.sps.text.filter.type:     
+        class:  Zk2\SPSBundle\Form\Type\TextFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_text_filter_type }
+
+    zk2.sps.numeric.filter.type:
+        class:  Zk2\SPSBundle\Form\Type\NumericFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_numeric_filter_type }
+
+    zk2.sps.choice.filter.type:     
+        class:  Zk2\SPSBundle\Form\Type\ChoiceFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_choice_filter_type }
+
+    zk2.sps.boolean.filter.type:     
+        class:  Zk2\SPSBundle\Form\Type\BooleanFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_boolean_filter_type }
+
+    zk2.sps.date.filter.type:     
+        class:  Zk2\SPSBundle\Form\Type\DateFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_date_filter_type }

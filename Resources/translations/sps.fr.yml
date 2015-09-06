@@ -1,0 +1,10 @@
+paginator.results: 'Le résultat|Du résultat|Des résultats'
+paginator.items: 'La page|Les pages|Des pages'
+paginator.firstPageText: 'La première page'
+paginator.previousPageText: 'La page précédente'
+paginator.nextPageText: 'La page suivant'
+paginator.lastPageText: 'La dernière page'
+filter.filter: 'Le filtre'
+filter.reset: 'La faille'
+'yes': Oui
+'no': Non

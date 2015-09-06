@@ -1,0 +1,162 @@
+#sps_filter label {
+    color: #006B45;
+}
+
+#sps_filter,
+#sps_filter table td {
+    border: none;
+    background: #FFFFFF;
+}
+
+#sps_filter .zk2-sps-filter-field,
+#sps_filter .zk2-sps-filter-condition-pattern,
+#sps_filter .zk2-sps-filter-condition-operator {
+    font-size: 10px;
+    height: 20px;
+    line-height: 1.5;
+    padding: 2px;
+    margin-top: 5px;
+}
+
+#sps_filter .zk2-sps-filter-condition-pattern {
+    max-width: 50px;
+    width: 50px;
+}
+
+#sps_filter .zk2-sps-filter-condition-operator {
+    max-width: 80px;
+    width: 80px;
+}
+
+#sps_filter .sps-child-filter {
+    display: inline-block;
+}
+
+#sps_filter .input-group-addon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    padding: 0px;
+    cursor: pointer;
+    margin-left: -20px;
+    margin-right: 2px;
+    margin-top: 5px;
+}
+
+#sps_filter .sps-filter-img {
+    cursor: pointer;
+    margin-left: 3px;
+}
+
+#sps_filter .navbar {
+    margin: 0;
+    background: #006B45;
+    min-height: 30px;
+    text-align: center;
+}
+
+#sps_filter .navbar-brand {
+    text-align: center;
+    width: 100%;
+    color: #E0DEDE;
+    padding: 5px 0;
+    font-size: 18px;
+    line-height: 42px;
+    height: 50px;
+}
+
+#sps_filter .navbar-brand > span {
+    margin-right: 5px;
+}
+
+#sps_filter .sps-child-filter-error input,
+#sps_filter .sps-child-filter-error select{
+    border-color: red;
+}
+
+#sps_filter .sps-child-filter-error-mess{
+    font-size: 11px;
+    color: red;
+}
+
+    /*--------------------*/
+#sps_table {
+    background: white;
+    font-size: 90%;
+}
+
+#sps_table > tbody > tr:hover > td {
+    background-color: #E8FCF2;
+}
+
+#sps_table th {
+    background-color: #3D3D3D;
+    position: relative;
+}
+
+#sps_table thead th {
+    line-height: 1.1;
+    padding-right: 10px;
+    font-weight: 300;
+    vertical-align: middle;
+}
+
+#sps_table th .sortable,
+#sps_table .sps-paginator-not-sorted {
+    color: #E0E0E0;
+}
+
+#sps_table thead th,
+#sps_table .sorted a,
+#sps_table .white,
+#sps_table .white a {
+    color: white;
+}
+
+#sps_table th > .sps-sort-container {
+    position: absolute;
+    right: 2px;
+    top: 0;
+    bottom: 0;
+}
+
+#sps_table th > .sps-sort-container > .sps-item {
+    position: relative;
+    height: 100%;
+    width: 7px;
+}
+
+#sps_table th > .sps-sort-container > .sps-item > .sps-sort {
+    line-height: 0;
+    padding: 0;
+    position: absolute;
+}
+
+#sps_table th > .sps-sort-container > .sps-item > .sps-sort:first-child {
+    top: 5px;
+}
+
+#sps_table th > .sps-sort-container > .sps-item > .sps-sort:last-child {
+    bottom: 5px;
+}
+
+#sps_table th > .sps-sort-container > .sps-item > .sps-sort > a {
+    line-height: 0;
+    padding: 0;
+}
+
+/*--------------------*/
+#sps_table .pagination {
+    margin: 0 auto;
+    margin-top: 5px;
+    padding: 0;
+}
+
+#sps_table .pagination > .active > a, .pagination > .active > span,
+#sps_table .pagination > .active > a:hover,
+#sps_table .pagination > .active > span:hover,
+#sps_table .pagination > .active > a:focus,
+#sps_table .pagination > .active > span:focus {
+    background-color: #006B45;
+    border-color: #006B45;
+}

@@ -1,0 +1,10 @@
+paginator.results: 'El resultado|Del resultado|De los resultados'
+paginator.items: 'La página|Las páginas|De las páginas'
+paginator.firstPageText: 'La primera página'
+paginator.previousPageText: 'La página anterior'
+paginator.nextPageText: 'La página siguiente'
+paginator.lastPageText: 'La última página'
+filter.filter: 'El filtro'
+filter.reset: 'El lanzamiento'
+yes: Sí
+no: No

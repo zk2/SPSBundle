@@ -1,0 +1,10 @@
+paginator.results: result|results|results
+paginator.items: page|pages|pages
+paginator.firstPageText: 'First page'
+paginator.previousPageText: 'Previous page'
+paginator.nextPageText: 'Next page'
+paginator.lastPageText: 'Last page'
+filter.filter: Filter
+filter.reset: Reset
+yes: Yes
+no: No

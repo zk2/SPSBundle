@@ -1,0 +1,10 @@
+paginator.results: результат|результата|результатов
+paginator.items: страница|страницы|страниц
+paginator.firstPageText: 'Первая страница'
+paginator.previousPageText: 'Предыдущая страница'
+paginator.nextPageText: 'Следующая страница'
+paginator.lastPageText: 'Последняя страница'
+filter.filter: Фильтр
+filter.reset: Сброс
+'yes': Да
+'no': Нет
