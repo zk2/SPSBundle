@@ -34,7 +34,9 @@ abstract class QueryBuilder
         $this->platform_name = $this->getPlatfornName();
 
         foreach ($form->all() as $child) {
-            $group_child[$child->getConfig()->getOption('sps_global_name')][] = $child;
+            $key = $child->getConfig()->getOption('sps_global_alias')
+                .'.'.$child->getConfig()->getOption('sps_global_name');
+            $group_child[$key][] = $child;
         }
 
         return $group_child;
