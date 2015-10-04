@@ -160,7 +160,7 @@ For example it will be clearer. Small application "Cars" The structure of classi
          */
         public function indexAction()
         {
-            $sps = $this->get('нужный сервис')
+            $sps = $this->get('the right service')
                 ->setRoot('AppBundle\Entity\Model', 'm'); // The main entity and alias
 
             // Reset all filters
