@@ -1,15 +1,15 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SPSBundle\Form\Filter;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zk2\SPSBundle\Model\ConditionOperator;
+use Zk2\SPSBundle\Utils\ConditionOperator;
 
 /**
  * Class BaseFilterType
- * @package Zk2\SPSBundle\Form\Type
+ * @package Zk2\SPSBundle\Form\Filter
  */
 abstract class BaseFilterType extends AbstractType
 {
@@ -71,9 +71,9 @@ abstract class BaseFilterType extends AbstractType
                 'level' => 0,
                 'not_used' => false,
                 'only_one_main_field' => false,
-                'sps_global_name' => null,
-                'sps_global_alias' => null,
-                'sps_type' => null,
+                'sps_field_name' => null,
+                'sps_field_alias' => null,
+                'sps_field_type' => null,
             )
         );
     }

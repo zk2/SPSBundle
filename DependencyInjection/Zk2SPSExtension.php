@@ -26,11 +26,8 @@ class Zk2SPSExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        foreach ($config as $parameter => $name) {
-            $container->setParameter(
-                'zk2_sps.'.$parameter,
-                $name
-            );
+        foreach ($config as $parameter => $value) {
+            $container->setParameter('zk2_sps.'.$parameter, $value);
         }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

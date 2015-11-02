@@ -6,12 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zk2\SPSBundle\Model\FilterField;
+use Zk2\SPSBundle\Exceptions\InvalidArgumentException;
 
 /**
- * Class SPSFilterType
+ * Class SPSType
  * @package Zk2\SPSBundle\Form\Type
  */
-class SPSFilterType extends AbstractType
+class SPSType extends AbstractType
 {
     /**
      * @var array
@@ -26,7 +27,7 @@ class SPSFilterType extends AbstractType
     {
         foreach ($array_fields as $field) {
             if (!$field instanceof FilterField) {
-                throw new \Exception('SPSFilterType::__construct: Field must be instanceof FilterField');
+                throw new InvalidArgumentException('SPSFilterType::__construct: Field must be instanceof FilterField');
             }
         }
         $this->array_fields = $array_fields;
@@ -45,15 +46,10 @@ class SPSFilterType extends AbstractType
                     sprintf("zk2_sps_%s_filter_type", $field->getType()),
                     array_merge(
                         $field->getAttributes(),
-                        array(
-                            'level' => $i,
-                            'sps_global_name' => $field->getField(),
-                            'sps_global_alias' => $field->getAlias(),
-                            'sps_type' => $field->getType(),
-                        )
+                        array('level' => $i)
                     )
                 );
-                if ('boolean' == $field->getType() or $field->getAttr('only_one_main_field')) {
+                if ($field->getAttr('only_one_main_field')) {
                     break;
                 }
             }

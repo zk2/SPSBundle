@@ -1,17 +1,16 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SPSBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Type;
-use Zk2\SPSBundle\Model\ConditionOperator;
+use Zk2\SPSBundle\Utils\ConditionOperator;
 
 /**
- * Class NumericFilterType
- * @package Zk2\SPSBundle\Form\Type
+ * Class ChoiceFilterType
+ * @package Zk2\SPSBundle\Form\Filter
  */
-class NumericFilterType extends BaseFilterType
+class ChoiceFilterType extends BaseFilterType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -23,19 +22,12 @@ class NumericFilterType extends BaseFilterType
 
         $builder->add(
             'name',
-            null,
+            'choice',
             array(
                 'required' => false,
-                'constraints' => array(
-                    new Type(
-                        array(
-                            'type' => "numeric",
-                            'message' => "The value {{ value }} is not a valid {{ type }}.",
-                        )
-                    ),
-                ),
+                'choices' => $options['choices'],
                 'attr' => array(
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
                     'data-index' => $options['level'],
                 ),
             )
@@ -52,7 +44,8 @@ class NumericFilterType extends BaseFilterType
         $resolver->setDefaults(
             array(
                 'condition_operator_hidden' => 'eq',
-                'condition_operators' => ConditionOperator::fullInt(),
+                'condition_operators' => ConditionOperator::eqNotEq(),
+                'choices' => array(),
             )
         );
     }
@@ -62,6 +55,6 @@ class NumericFilterType extends BaseFilterType
      */
     public function getName()
     {
-        return 'zk2_sps_numeric_filter_type';
+        return 'zk2_sps_choice_filter_type';
     }
 }

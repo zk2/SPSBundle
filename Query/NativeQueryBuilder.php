@@ -1,5 +1,5 @@
 <?php
-namespace Zk2\SPSBundle\Model;
+namespace Zk2\SPSBundle\Query;
 
 use Symfony\Component\Form\Form;
 

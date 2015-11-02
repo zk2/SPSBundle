@@ -1,16 +1,17 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SPSBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zk2\SPSBundle\Model\ConditionOperator;
+use Symfony\Component\Validator\Constraints\Date;
+use Zk2\SPSBundle\Utils\ConditionOperator;
 
 /**
- * Class ChoiceFilterType
- * @package Zk2\SPSBundle\Form\Type
+ * Class DateFilterType
+ * @package Zk2\SPSBundle\Form\Filter
  */
-class ChoiceFilterType extends BaseFilterType
+class DateFilterType extends BaseFilterType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -22,12 +23,15 @@ class ChoiceFilterType extends BaseFilterType
 
         $builder->add(
             'name',
-            'choice',
+            'zk2_sps_date_bootstrap_type',
             array(
                 'required' => false,
-                'choices' => $options['choices'],
+                'constraints' => array(
+                    new Date(),
+                ),
                 'attr' => array(
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
+                    'readonly' => 'readonly',
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-date-field',
                     'data-index' => $options['level'],
                 ),
             )
@@ -44,8 +48,10 @@ class ChoiceFilterType extends BaseFilterType
         $resolver->setDefaults(
             array(
                 'condition_operator_hidden' => 'eq',
-                'condition_operators' => ConditionOperator::eqNotEq(),
+                'condition_operators' => ConditionOperator::fullInt(),
                 'choices' => array(),
+                'model_timezone' => date_default_timezone_get(),
+                'view_timezone' => date_default_timezone_get(),
             )
         );
     }
@@ -55,6 +61,6 @@ class ChoiceFilterType extends BaseFilterType
      */
     public function getName()
     {
-        return 'zk2_sps_choice_filter_type';
+        return 'zk2_sps_date_filter_type';
     }
 }

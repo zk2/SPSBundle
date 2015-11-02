@@ -7,11 +7,25 @@ namespace Zk2\SPSBundle\Model;
  */
 class ColumnField
 {
-    protected
-        $alias,
-        $field,
-        $type,
-        $attr = array();
+    /**
+     * @var string
+     */
+    protected $alias;
+
+    /**
+     * @var string
+     */
+    protected $field;
+
+    /**
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * @var array
+     */
+    protected $attr = array();
 
     /**
      * @var array
@@ -82,7 +96,7 @@ class ColumnField
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getMethod()
     {

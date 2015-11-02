@@ -2,10 +2,14 @@
 
 namespace Zk2\SPSBundle\Model;
 
-use Symfony\Component\DependencyInjection\Container;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Paginator;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Zk2\SPSBundle\Form\Type\SPSFilterType;
+use Zk2\SPSBundle\Form\Type\SPSType;
+use Zk2\SPSBundle\Query\QueryBuilder;
+use Zk2\SPSBundle\Utils\FormFilterSession;
 
 /**
  * Class SPS
@@ -13,69 +17,24 @@ use Zk2\SPSBundle\Form\Type\SPSFilterType;
 abstract class SPS
 {
     /**
-     * @var
-     */
-    protected $rootModel;
-
-    /**
-     * @var
-     */
-    protected $rootAlias;
-
-    /**
-     * @var \Doctrine\Common\Persistence\ObjectManager|object
-     */
-    protected $em;
-
-    /**
-     * @var
-     */
-    protected $query;
-
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
-     * @var \Symfony\Component\Form\FormFactory
-     */
-    protected $form_factory;
-
-    /**
-     * @var array
-     */
-    protected $columns = array();
-
-    /**
-     * @var array
-     */
-    protected $filters = array();
-
-    /**
-     * @var
-     */
-    protected $filter_form;
-
-    /**
-     * @var null|\Symfony\Component\HttpFoundation\Request
+     * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
 
     /**
-     * @var Container
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
-    protected $container;
+    protected $em;
 
     /**
-     * @var Session
+     * @var string
      */
-    protected $session;
+    protected $em_name = 'default';
 
     /**
-     * @var FormFilterSession
+     * @var \Zk2\SPSBundle\Query\QueryBuilder
      */
-    protected $form_filter_session;
+    protected $queryBuilder;
 
     /**
      * @var \Knp\Component\Pager\Paginator
@@ -93,24 +52,65 @@ abstract class SPS
     protected $paginator_options = array();
 
     /**
-     * @var mixed
+     * @var \Symfony\Component\HttpFoundation\Session\Session
      */
-    protected $pagination_template;
+    protected $session;
 
     /**
-     * @var mixed
+     * @var
      */
-    protected $sortable_template;
+    protected $query;
+
+    /**
+     * @var array
+     */
+    protected $columns = array();
+
+    /**
+     * @var array
+     */
+    protected $filters = array();
+
+    /**
+     * @var array
+     */
+    protected $defaultFilters = array();
+
+    /**
+     * @var \Symfony\Component\Form\Form
+     */
+    protected $filterForm;
+
+    /**
+     * @var \Symfony\Component\Form\FormFactory
+     */
+    protected $formFactory;
+
+    /**
+     * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
+     */
+    protected $router;
+
+    /**
+     * @var \Zk2\SPSBundle\Utils\FormFilterSession
+     */
+    protected $formFilterSession;
+
+    /**
+     * @var array
+     */
+    protected $options = array();
 
     /**
      * @var array
      */
     protected $column_types = array(
+        'text',
         'string',
         'numeric',
         'boolean',
-        'image',
         'datetime',
+        'image',
         'button',
     );
 
@@ -119,70 +119,57 @@ abstract class SPS
      */
     protected $filter_types = array(
         'text',
+        'string',
         'numeric',
-        'choice',
         'boolean',
         'date',
+        'choice',
     );
 
     /**
+     * @var string
+     */
+    protected $totalRoute;
+
+    /**
+     * @var array
+     */
+    protected $totalRouteParams = array();
+
+    /**
+     * @var string
+     */
+    protected $ukey;
+
+    /**
      * @param RequestStack $request
-     * @param Container $container
-     * @param Session $session
-     * @param QueryBuilder $queryBuilder
-     * @param $em_name
+     * @param EntityManagerInterface $em
+     * @param Paginator $paginator
+     * @param FormFactory $formFactory
+     * @param Router $router
+     * @param FormFilterSession $formFilterSession
+     * @param array $options
      */
     public function __construct(
         RequestStack $request,
-        Container $container,
-        Session $session,
-        QueryBuilder $queryBuilder,
-        $em_name
+        EntityManagerInterface $em,
+        Paginator $paginator,
+        FormFactory $formFactory,
+        Router $router,
+        FormFilterSession $formFilterSession,
+        array $options
     ) {
         $this->request = $request->getCurrentRequest();
-        $this->container = $container;
-        $this->session = $session;
-        $this->queryBuilder = $queryBuilder;
-        $this->em_name = $em_name;
-        $this->em = $this->container->get('doctrine')->getManager($em_name);
-        $this->form_factory = $this->container->get('form.factory');
-        $this->form_filter_session = $this->container->get('zk2.sps.form_filter.session');
-        $this->paginator = $this->container->get('knp_paginator');
-        $this->pagination_template = $this->container->getParameter('zk2_sps.pagination_template');
-        $this->sortable_template = $this->container->getParameter('zk2_sps.sortable_template');
-    }
-
-    /**
-     * Is Reset
-     *
-     * Check whether the event to reset all filters
-     * If true - remove sessipn variable this filter
-     *
-     * @return boolean
-     */
-    public function isReset()
-    {
-        if ($this->request->query->get('_reset')) {
-            $this->session->remove('_filter_'.$this->request->get('_route'));
-            $this->session->remove('_pager_'.$this->request->get('_route'));
-
-            return $this->request->get('_route');
-        }
-
-        return null;
-    }
-
-    /**
-     * @param $rootModel
-     * @param $rootAlias
-     * @return $this
-     */
-    public function setRoot($rootModel, $rootAlias)
-    {
-        $this->rootModel = $rootModel;
-        $this->rootAlias = $rootAlias;
-
-        return $this;
+        $this->session = $this->request->getSession();
+        $this->em = $em;
+        $this->paginator = $paginator;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
+        $this->formFilterSession = $formFilterSession;
+        $this->options = $options;
+        $this->totalRoute = $this->request->get('_route');
+        $this->totalRouteParams = $this->request->get('_route_params');
+        $this->ukey = $this->totalRoute.(http_build_query($this->totalRouteParams, null, '_sps_'));
     }
 
     /**
@@ -191,9 +178,54 @@ abstract class SPS
     abstract protected function getPaginator();
 
     /**
-     * Get Entity Manager
+     * buildQuery
      *
-     * @return \Doctrine\Common\Persistence\ObjectManager
+     * @param string $param1 - if doctrineSPS ? rootModel : SQL query
+     * @param string $param1 - if doctrineSPS ? rootEntityAlias : array fields for \Doctrine\ORM\Query\ResultSetMapping
+     *
+     * @return $this
+     */
+    abstract protected function buildQuery($param1, $param2);
+
+    /**
+     * @param $em_name
+     */
+    public function setEmName($em_name)
+    {
+        $this->em_name = $em_name;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
+    public function setQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $this->queryBuilder = $queryBuilder;
+    }
+
+    /**
+     * Is Reset
+     *
+     * Check whether the event to reset all filters
+     * If true - remove sessipn variable this filter
+     *
+     * @return string|null
+     */
+    public function isReset()
+    {
+        if ($this->request->query->get('_sps_reset')) {
+            $this->session->remove('_sps_filter_'.$this->ukey);
+            $this->session->remove('_sps_pager_'.$this->ukey);
+            $this->session->remove('_sps_sort_'.$this->ukey);
+
+            return $this->router->generate($this->totalRoute, $this->totalRouteParams);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return EntityManagerInterface
      */
     public function getEm()
     {
@@ -201,9 +233,7 @@ abstract class SPS
     }
 
     /**
-     * Get Query
-     *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return mixed
      */
     public function getQuery()
     {
@@ -211,8 +241,10 @@ abstract class SPS
     }
 
     /**
-     * Add Column
-     *
+     * @param $alias
+     * @param $field
+     * @param string $type
+     * @param array $attr
      * @return $this
      */
     public function addColumn($alias, $field, $type = 'string', array $attr = array())
@@ -228,11 +260,21 @@ abstract class SPS
     }
 
     /**
-     * Add Filter
-     *
+     * @param array $defaultFilters
+     */
+    public function setDefaultFilters(array $defaultFilters)
+    {
+        $this->defaultFilters = $defaultFilters;
+    }
+
+    /**
+     * @param $alias
+     * @param $field
+     * @param string $type
+     * @param array $attr
      * @return $this
      */
-    public function addFilter($alias, $field, $type = 'text', array $attr = array())
+    public function addFilter($alias, $field, $type = 'string', array $attr = array())
     {
         if (!in_array($type, $this->filter_types)) {
             throw new \InvalidArgumentException(
@@ -282,50 +324,45 @@ abstract class SPS
      * else if in session is a form of filter-it is Otherwise,
      * if there is a default filters-they are
      *
-     * @param array $default (stand default filter (option))
-     * @return
+     * @return null
      */
-    protected function checkFilters($default = array())
+    protected function checkFilters()
     {
         if ($this->filters) {
-            $this->filter_form = $this->form_factory->create(new SPSFilterType($this->filters));
+            $this->filterForm = $this->formFactory->create(new SPSType($this->filters));
+            $this->filterForm->setData($this->defaultFilters);
+            $this->filterForm->handleRequest($this->request);
 
-            if (count($default)) {
-                $this->filter_form->setData($default);
+            if ($this->filterForm->getErrors()->count()) {
+                $this->session->getFlashBag()->add('error', 'The form of the filter contains errors...');
             }
 
-            $this->filter_form->handleRequest($this->request);
+            if ($this->filterForm->isValid()) {
+                $this->session->remove('_sps_filter_'.$this->ukey);
+                $this->session->remove('_sps_pager_'.$this->ukey);
 
-            if ($this->filter_form->getErrors()->count()) {
-                $this->session->getFlashBag()->add('error', 'Форма фильтра содержит ошибки...');
-            }
+                $this->queryBuilder->buildQuery($this->filterForm, $this->query);
 
-            if ($this->filter_form->isValid()) {
-                $this->session->remove('_filter_'.$this->request->get('_route'));
-                $this->session->remove('_pager_'.$this->request->get('_route'));
-
-                $this->queryBuilder->buildQuery($this->filter_form, $this->query);
-
-                $this->form_filter_session->serialize(
-                    $this->filter_form->getData(),
-                    '_filter_'.$this->request->get('_route')
+                $this->formFilterSession->serialize(
+                    $this->filterForm->getData(),
+                    '_sps_filter_'.$this->ukey
                 );
-            } elseif ($this->session->has('_filter_'.$this->request->get('_route'))) {
-                $data = $this->form_filter_session->unserialize(
-                    '_filter_'.$this->request->get('_route'),
+            } elseif ($this->session->has('_sps_filter_'.$this->ukey)) {
+                $data = $this->formFilterSession->unserialize(
+                    '_sps_filter_'.$this->ukey,
                     $this->em_name
                 );
 
-                $this->filter_form->setData($data);
-                $this->queryBuilder->buildQuery($this->filter_form, $this->query);
-            } elseif (count($default)) {
-                $this->buildQuery->buildQuery($this->filter_form, $this->query);
+                $this->filterForm->setData($data);
+                $this->queryBuilder->buildQuery($this->filterForm, $this->query);
+            } elseif (count($this->defaultFilters)) {
+                $this->buildQuery->buildQuery($this->filterForm, $this->query);
             }
         }
     }
 
     /**
-     * setPaginatorLimit
+     * @param $num
      */
     public function setPaginatorLimit($num)
     {
@@ -335,11 +372,25 @@ abstract class SPS
     }
 
     /**
-     * setPaginator
+     * @param array $options
      */
     public function setPaginatorOptions(array $options)
     {
         $this->paginator_options = $options;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     */
+    public function setOptions($name,$value)
+    {
+        if(!isset($this->options[$name])){
+            throw new \InvalidArgumentException(
+                sprintf("Option %s is not valid", $name)
+            );
+        }
+        $this->options[$name] = $value;
     }
 
     /**
@@ -353,7 +404,7 @@ abstract class SPS
 
         return array(
             'columns' => $this->columns,
-            'filter_form' => $this->filter_form->createView(),
+            'filter_form' => $this->filterForm->createView(),
             'paginator' => $this->getPaginator(),
         );
     }

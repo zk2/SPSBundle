@@ -1,5 +1,5 @@
 <?php
-namespace Zk2\SPSBundle\Model;
+namespace Zk2\SPSBundle\Utils;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -70,7 +70,7 @@ class FormFilterSession
                 } else {
                     unset($data[$fname]);
                 }
-            } elseif (checkdate($date["month"], $date["day"], $date["year"])) {
+            } elseif ($date and checkdate($date["month"], $date["day"], $date["year"])) {
                 $data[$fname]['name'] = new \DateTime($field['name']);
             }
         }
