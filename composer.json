@@ -1,7 +1,7 @@
 {
   "name": "zk2/sps-bundle",
   "description": "Bundle implements the concept of \"Search - Pagination - Sort\" for tabular data",
-  "version" : "1.0.0",
+  "version" : "2.0.0",
   "type" : "symfony-bundle",
   "homepage": "https://github.com/zk2/SPSBundle",
   "license": "MIT",
@@ -25,7 +25,7 @@
   },
   "extra" : {
     "branch-alias" : {
-      "dev-master" : "1.0.x-dev"
+      "dev-master" : "2.0.x-dev"
     }
   }
 }
