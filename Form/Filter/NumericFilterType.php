@@ -1,16 +1,17 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SPSBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zk2\SPSBundle\Model\ConditionOperator;
+use Symfony\Component\Validator\Constraints\Type;
+use Zk2\SPSBundle\Utils\ConditionOperator;
 
 /**
- * Class TextFilterType
- * @package Zk2\SPSBundle\Form\Type
+ * Class NumericFilterType
+ * @package Zk2\SPSBundle\Form\Filter
  */
-class TextFilterType extends BaseFilterType
+class NumericFilterType extends BaseFilterType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -25,8 +26,16 @@ class TextFilterType extends BaseFilterType
             null,
             array(
                 'required' => false,
+                'constraints' => array(
+                    new Type(
+                        array(
+                            'type' => "numeric",
+                            'message' => "The value {{ value }} is not a valid {{ type }}.",
+                        )
+                    ),
+                ),
                 'attr' => array(
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-text-field',
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
                     'data-index' => $options['level'],
                 ),
             )
@@ -42,8 +51,8 @@ class TextFilterType extends BaseFilterType
 
         $resolver->setDefaults(
             array(
-                'condition_operator_hidden' => '_like_',
-                'condition_operators' => ConditionOperator::fullText(),
+                'condition_operator_hidden' => 'eq',
+                'condition_operators' => ConditionOperator::fullInt(),
             )
         );
     }
@@ -53,6 +62,6 @@ class TextFilterType extends BaseFilterType
      */
     public function getName()
     {
-        return 'zk2_sps_text_filter_type';
+        return 'zk2_sps_numeric_filter_type';
     }
 }

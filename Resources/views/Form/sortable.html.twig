@@ -3,13 +3,13 @@
     <div class="sps-item">
         <div class="sps-sort">
             {% set iclr = options['class'] == 'asc' ? 'yellow' : 'white' %}
-            <a href="{{ options['href']~'&direction=asc' }}" class="{{ options['class'] }}" title="A-Z">
+            <a href="{{ options['href']~'&'~sortDirectionParameterName~'=asc' }}" class="{{ options['class'] }}" title="A-Z">
                 <img src="{{ asset('bundles/zk2sps/images/' ~ iclr ~ '-asc.png') }}">
             </a>
         </div>
         <div class="sps-sort">
             {% set iclr = options['class'] == 'desc' ? 'yellow' : 'white' %}
-            <a href="{{ options['href']~'&direction=desc' }}" class="{{ options['class'] }}" title="Z-A">
+            <a href="{{ options['href']~'&'~sortDirectionParameterName~'=desc' }}" class="{{ options['class'] }}" title="Z-A">
                 <img src="{{ asset('bundles/zk2sps/images/' ~ iclr ~ '-desc.png') }}">
             </a>
         </div>

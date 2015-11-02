@@ -17,23 +17,34 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+        $options = array('pagination_template', 'sortable_template', 'timezone_db');
+
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('zk2_sps');
 
         $rootNode
             ->children()
-                ->scalarNode('pagination_template')
-                    ->defaultValue('Zk2SPSBundle:Form:pagination.html.twig')
+                ->arrayNode('options')
                     ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('sortable_template')
-                     ->defaultValue('Zk2SPSBundle:Form:sortable.html.twig')
-                     ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('timezone_db')
-                    ->defaultValue(date_default_timezone_get())
-                    ->cannotBeEmpty()
-                ->end()
+                    ->validate()
+                        ->ifTrue(function($v) use($options) {return count($v) === count($options);})
+                        ->thenInvalid('The option "options" is not valid. Please used all: '.json_encode($options))
+                    ->end()
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('pagination_template')
+                            ->defaultValue('Zk2SPSBundle:Form:pagination.html.twig')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('sortable_template')
+                            ->defaultValue('Zk2SPSBundle:Form:sortable.html.twig')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('timezone_db')
+                            ->defaultValue(date_default_timezone_get())
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
             ->end()
         ;
 

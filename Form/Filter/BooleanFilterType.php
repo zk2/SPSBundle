@@ -1,17 +1,16 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SPSBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Date;
-use Zk2\SPSBundle\Model\ConditionOperator;
+use Zk2\SPSBundle\Utils\ConditionOperator;
 
 /**
- * Class DateFilterType
- * @package Zk2\SPSBundle\Form\Type
+ * Class BooleanFilterType
+ * @package Zk2\SPSBundle\Form\Filter
  */
-class DateFilterType extends BaseFilterType
+class BooleanFilterType extends BaseFilterType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -23,15 +22,13 @@ class DateFilterType extends BaseFilterType
 
         $builder->add(
             'name',
-            'zk2_sps_date_bootstrap_type',
+            'choice',
             array(
                 'required' => false,
-                'constraints' => array(
-                    new Date(),
-                ),
+                'choices' => array('' => '', '1' => 'yes', '0' => 'no'),
+                'translation_domain' => 'sps',
                 'attr' => array(
-                    'readonly' => 'readonly',
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-date-field',
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
                     'data-index' => $options['level'],
                 ),
             )
@@ -48,11 +45,8 @@ class DateFilterType extends BaseFilterType
         $resolver->setDefaults(
             array(
                 'condition_operator_hidden' => 'eq',
-                'condition_operators' => ConditionOperator::fullInt(),
+                'condition_operators' => ConditionOperator::eqNotEq(),
                 'choices' => array(),
-                'use_timezone' => false,
-                'model_timezone' => date_default_timezone_get(),
-                'view_timezone' => date_default_timezone_get(),
             )
         );
     }
@@ -62,6 +56,6 @@ class DateFilterType extends BaseFilterType
      */
     public function getName()
     {
-        return 'zk2_sps_date_filter_type';
+        return 'zk2_sps_boolean_filter_type';
     }
 }

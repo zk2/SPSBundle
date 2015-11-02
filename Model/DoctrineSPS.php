@@ -2,9 +2,8 @@
 
 namespace Zk2\SPSBundle\Model;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Zk2\SPSBundle\Model\SPS;
+
 
 /**
  * Class DoctrineSPS
@@ -12,38 +11,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class DoctrineSPS extends SPS
 {
     /**
-     * @param RequestStack $request
-     * @param Container $container
-     * @param Session $session
-     * @param QueryBuilder $queryBuilder
-     * @param $em_name
-     */
-    public function __construct(
-        RequestStack $request,
-        Container $container,
-        Session $session,
-        QueryBuilder $queryBuilder,
-        $em_name
-    ) {
-        parent::__construct(
-            $request,
-            $container,
-            $session,
-            $queryBuilder,
-            $em_name
-        );
-    }
-
-    /**
      * buildQuery
      *
      * Building a query without conditions
      *
+     * @param string $rootModel
+     * @param string $rootEntityAlias
+     *
      * @return $this
      */
-    public function buildQuery()
+    public function buildQuery($rootModel, $rootEntityAlias)
     {
-        $this->query = $this->em->getRepository($this->rootModel)->createQueryBuilder($this->rootAlias);
+        $this->query = $this->em->getRepository($rootModel)->createQueryBuilder($rootEntityAlias);
 
         return $this;
     }
@@ -51,22 +30,34 @@ class DoctrineSPS extends SPS
     /**
      * Get Paginator
      *
-     * @param integer $limit ( limit per page )
-     * @param array $options
      * @return \Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination
      */
     protected function getPaginator()
     {
-        $page = $this->request->query->get('page', 1);
+        $pn = $this->paginator->paginate(array());
+        $sort_name = $pn->getPaginatorOption('sortFieldParameterName');
+        $sort_direction_name = $pn->getPaginatorOption('sortDirectionParameterName');
+        $page_name = $pn->getPaginatorOption('pageParameterName');
+        $page = $this->request->query->getInt($page_name, 1);
 
-        if ($this->request->query->has('page')) {
-            $this->session->set('_pager_'.$this->request->get('_route'), $page);
-        } elseif ($this->session->has('_pager_'.$this->request->get('_route'))) {
-            $page = $this->session->get('_pager_'.$this->request->get('_route'));
+        if ($this->request->query->has($sort_name)) {
+            $this->session->set('_sps_sort_'.$this->ukey, array(
+                'defaultSortFieldName' => $this->request->query->get($sort_name),
+                'defaultSortDirection' => $this->request->query->get($sort_direction_name, 'asc')
+            ));
         }
 
-        if ((!$this->request->query->has('sort') or !$this->request->query->has('direction'))
-            and isset($this->paginator_options['default_sort']) and $this->paginator_options['default_sort']
+        if ($this->request->query->has($page_name)) {
+            $this->session->set('_sps_pager_'.$this->ukey, $page);
+        } elseif ($this->session->has('_sps_pager_'.$this->ukey)) {
+            $page = $this->session->get('_sps_pager_'.$this->ukey);
+        }
+        if($sort = $this->session->get('_sps_sort_'.$this->ukey)){
+            $this->paginator_options = array_merge(
+                $this->paginator_options,
+                $sort
+            );
+        } elseif (!$sort and isset($this->paginator_options['default_sort']) and $this->paginator_options['default_sort']
         ) {
             foreach ($this->paginator_options['default_sort'] as $field => $type) {
                 $this->query->addOrderBy($field, $type);
@@ -80,8 +71,8 @@ class DoctrineSPS extends SPS
             $this->paginator_options
         );
 
-        $pagination->setTemplate($this->pagination_template);
-        $pagination->setSortableTemplate($this->sortable_template);
+        $pagination->setTemplate($this->options['pagination_template']);
+        $pagination->setSortableTemplate($this->options['sortable_template']);
 
         return compact('pagination');
     }
