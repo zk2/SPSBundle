@@ -2,7 +2,7 @@
 
 namespace Zk2\SPSBundle\Model;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\FormFactory;
@@ -22,9 +22,9 @@ abstract class SPS
     protected $request;
 
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
      */
-    protected $em;
+    protected $doctrine;
 
     /**
      * @var string
@@ -143,7 +143,7 @@ abstract class SPS
 
     /**
      * @param RequestStack $request
-     * @param EntityManagerInterface $em
+     * @param Registry $doctrine
      * @param Paginator $paginator
      * @param FormFactory $formFactory
      * @param Router $router
@@ -152,7 +152,7 @@ abstract class SPS
      */
     public function __construct(
         RequestStack $request,
-        EntityManagerInterface $em,
+        Registry $doctrine,
         Paginator $paginator,
         FormFactory $formFactory,
         Router $router,
@@ -161,7 +161,7 @@ abstract class SPS
     ) {
         $this->request = $request->getCurrentRequest();
         $this->session = $this->request->getSession();
-        $this->em = $em;
+        $this->doctrine = $doctrine;
         $this->paginator = $paginator;
         $this->formFactory = $formFactory;
         $this->router = $router;
@@ -229,7 +229,7 @@ abstract class SPS
      */
     public function getEm()
     {
-        return $this->em;
+        return $this->doctrine->getManager($this->em_name);
     }
 
     /**

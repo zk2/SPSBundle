@@ -25,7 +25,7 @@ class NativeSPS extends SPS
         foreach ($fields as $field) {
             $rsm->addScalarResult($field, $field);
         }
-        $this->query = $this->em->createNativeQuery($query, $rsm);
+        $this->query = $this->getEm()->createNativeQuery($query, $rsm);
 
         return $this;
     }
@@ -66,7 +66,7 @@ class NativeSPS extends SPS
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('cnt', 'cnt');
         $q = sprintf("SELECT COUNT(*) cnt FROM(%s) zzz", $this->query->getSQL());
-        $cntQuery = $this->em->createNativeQuery($q, $rsm)->setParameters($this->query->getParameters());
+        $cntQuery = $this->getEm()->createNativeQuery($q, $rsm)->setParameters($this->query->getParameters());
         try {
             $cnt = $cntQuery->getSingleScalarResult();
         } catch (\Doctrine\Orm\NoResultException $e) {

@@ -11,7 +11,7 @@ services:
         abstract: true
         arguments:
             - @request_stack
-            - @doctrine.orm.entity_manager
+            - @doctrine
             - @knp_paginator
             - @form.factory
             - @router

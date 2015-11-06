@@ -22,7 +22,7 @@ class DoctrineSPS extends SPS
      */
     public function buildQuery($rootModel, $rootEntityAlias)
     {
-        $this->query = $this->em->getRepository($rootModel)->createQueryBuilder($rootEntityAlias);
+        $this->query = $this->getEm()->getRepository($rootModel)->createQueryBuilder($rootEntityAlias);
 
         return $this;
     }
