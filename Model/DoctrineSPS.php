@@ -76,4 +76,29 @@ class DoctrineSPS extends SPS
 
         return compact('pagination');
     }
+
+    protected function getAutosum()
+    {
+        $select = '';
+        foreach($this->columns as $coll){
+            if($alias = $coll->getAttr('autosum')){
+                $select .= sprintf("SUM(%s) AS %s,", $coll->getAliasDotName(), $alias);
+            }
+        }
+        if($select = trim($select, ',')){
+            $q = strstr($this->query->getQuery()->getDql(), " FROM ");
+            $q = sprintf("SELECT %s %s", $select, $q);
+
+            $sumQuery = $this->getEm()->createQuery($q)
+                ->setParameters($this->query->getQuery()->getParameters())
+                ->setMaxResults(1);
+
+            try {
+                return $sumQuery->getSingleResult();
+            } catch (\Doctrine\Orm\NoResultException $e) {
+
+            }
+        }
+        return null;
+    }
 }

@@ -67,6 +67,11 @@ abstract class SPS
     protected $columns = array();
 
     /**
+     * @var mixed
+     */
+    protected $autosum;
+
+    /**
      * @var array
      */
     protected $filters = array();
@@ -406,6 +411,12 @@ abstract class SPS
             'columns' => $this->columns,
             'filter_form' => $this->filterForm->createView(),
             'paginator' => $this->getPaginator(),
+            'autosum' => $this->getAutosum(),
         );
+    }
+
+    protected function getAutosum()
+    {
+        return $this->autosum;
     }
 }

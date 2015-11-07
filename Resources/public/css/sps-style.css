@@ -160,3 +160,15 @@
     background-color: #006B45;
     border-color: #006B45;
 }
+
+#sps_table .zk-autosum th {
+    text-align: center;
+    font-weight: bold;
+    border-right: 1px solid #afafaf;
+    background-color: rgba(160, 255, 181, 0.55);
+    position: static;
+}
+
+#sps_table .zk-autosum th:last-child {
+    border-right: 0px solid #afafaf;
+}

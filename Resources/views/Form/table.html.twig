@@ -100,6 +100,13 @@
             {% endfor %}
         </tr>
     {% endfor %}
+    {% if autosum is defined and autosum %}
+        <tr class="zk-autosum">
+            {% for column_key,column in columns %}
+                <th>{{ column.getAttr('autosum') ? autosum[column.getAttr('autosum')] : null }}</th>
+            {% endfor %}
+        </tr>
+    {% endif %}
     <tfoot>
     <tr>
         <th class="text-center" colspan="{{ columns | length }}">{{ knp_pagination_render(paginator.pagination) }}</th>

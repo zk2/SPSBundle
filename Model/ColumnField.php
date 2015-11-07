@@ -32,6 +32,7 @@ class ColumnField
      */
     protected $default_attr = array(
         'sort' => true,
+        'autosum' => null,
     );
 
     /**
@@ -46,6 +47,9 @@ class ColumnField
         $this->field = $field;
         $this->type = $type;
         $this->attr = array_merge($this->default_attr, $attr);
+        if($this->type != 'numeric'){
+            $this->attr['autosum'] = null;
+        }
     }
 
     /**
