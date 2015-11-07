@@ -103,7 +103,12 @@
     {% if autosum is defined and autosum %}
         <tr class="zk-autosum">
             {% for column_key,column in columns %}
-                <th>{{ column.getAttr('autosum') ? autosum[column.getAttr('autosum')] : null }}</th>
+                <th>
+                    {% if column.getAttr('autosum') %}
+                        {% set num_format = column.getAttr('number_format') ?: default_number_format %}
+                        {{ autosum[column.getAttr('autosum')] | number_format(num_format[0]|default(0),num_format[1]|default('.'),num_format[2]|default('')) }}
+                    {% endif %}
+                </th>
             {% endfor %}
         </tr>
     {% endif %}
