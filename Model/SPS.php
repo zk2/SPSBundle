@@ -230,6 +230,14 @@ abstract class SPS
     }
 
     /**
+     * @return string
+     */
+    public function getUkey()
+    {
+        return $this->ukey;
+    }
+
+    /**
      * @return EntityManagerInterface
      */
     public function getEm()
