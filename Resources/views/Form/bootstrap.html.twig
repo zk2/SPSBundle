@@ -38,6 +38,10 @@
     {% endspaceless %}
 {% endblock %}
 
+{% block zk2_sps_string_filter_type_widget %}
+    {{ block('zk2_sps_text_filter_type_widget') }}
+{% endblock %}
+
 {% block zk2_sps_numeric_filter_type_widget %}
     {% spaceless %}
         {% set er_mess = null %}
