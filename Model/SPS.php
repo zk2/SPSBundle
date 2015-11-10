@@ -354,7 +354,9 @@ abstract class SPS
     protected function checkFilters()
     {
         if ($this->filters) {
-            $this->filterForm = $this->formFactory->create(new SPSType($this->filters));
+            $this->filterForm = $this->formFactory->create(new SPSType($this->filters), array(), array(
+                'action' => $this->router->generate($this->totalRoute, $this->totalRouteParams)
+            ));
             $this->filterForm->setData($this->defaultFilters);
             $this->filterForm->handleRequest($this->request);
 
