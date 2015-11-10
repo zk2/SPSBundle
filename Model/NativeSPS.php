@@ -98,4 +98,30 @@ class NativeSPS extends SPS
 
         return compact('pagination');
     }
+
+    protected function getAutosum()
+    {
+        $select = '';
+        $rsm = new ResultSetMapping();
+        foreach($this->columns as $coll){
+            if($alias = $coll->getAttr('autosum')){
+                $select .= sprintf("SUM(%s) AS %s,", $coll->getAliasDotName(), $alias);
+                $rsm->addScalarResult($alias, $alias);
+            }
+        }
+        if($select = trim($select, ',')){
+            $q = $this->query->getSQL();
+            $q = stristr($q, " FROM ");
+            $q_without_group_by = stristr($q, "GROUP BY");
+            $q = str_replace($q_without_group_by, " ", $q);
+            $q_without_order_by = stristr($q, "ORDER BY");
+            $q = str_replace($q_without_order_by, " ", $q);
+            $q = sprintf("SELECT %s %s", $select, $q);
+            $sumQuery = $this->getEm()->createNativeQuery($q, $rsm)->setParameters($this->query->getParameters());
+
+            return $sumQuery->getOneOrNullResult();
+        }
+
+        return null;
+    }
 }

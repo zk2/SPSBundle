@@ -6,7 +6,7 @@
         {% for column_key,column in columns %}
             {% if column.getAttr('sort') %}
                 <th{% if paginator.pagination.isSorted(column.aliasDotName) %} class="sorted"{% endif %}  {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>
-                    {{ knp_pagination_sortable(paginator.pagination, column.label, column.aliasDotName) }}
+                    {{ knp_pagination_sortable(paginator.pagination, column.label, column.sortAlias) }}
                 </th>
             {% else %}
                 <th class="sps-paginator-not-sorted" {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>{{ column.label }}</th>

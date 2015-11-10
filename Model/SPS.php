@@ -194,10 +194,22 @@ abstract class SPS
 
     /**
      * @param $em_name
+     *
+     * @return $this
      */
     public function setEmName($em_name)
     {
         $this->em_name = $em_name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmName()
+    {
+        return $this->em_name;
     }
 
     /**

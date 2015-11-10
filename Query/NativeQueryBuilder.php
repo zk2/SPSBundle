@@ -24,9 +24,13 @@ class NativeQueryBuilder extends QueryBuilder
 
         $sql = $query->getSQL();
 
+        if(false === stripos($sql, ' where ')){
+            $sql .= ' WHERE 1 ';
+        }
+
         foreach ($group_child as $field => $child) {
-            if ($condition = $this->applyFilter($child, $field)) {
-                $sql .= ' AND '.$condition;
+            if ($condition = $this->applyFilter($child)) {
+                $sql .= sprintf(" AND (%s) ", $condition);
             }
         }
 

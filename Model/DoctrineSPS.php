@@ -53,10 +53,7 @@ class DoctrineSPS extends SPS
             $page = $this->session->get('_sps_pager_'.$this->ukey);
         }
         if($sort = $this->session->get('_sps_sort_'.$this->ukey)){
-            $this->paginator_options = array_merge(
-                $this->paginator_options,
-                $sort
-            );
+            $this->query->addOrderBy($sort['defaultSortFieldName'], $sort['defaultSortDirection']);
         } elseif (!$sort and isset($this->paginator_options['default_sort']) and $this->paginator_options['default_sort']
         ) {
             foreach ($this->paginator_options['default_sort'] as $field => $type) {
@@ -65,7 +62,7 @@ class DoctrineSPS extends SPS
         }
 
         $pagination = $this->paginator->paginate(
-            $this->query,
+            $this->query->getQuery()->getResult(),
             $page,
             $this->paginator_limit,
             $this->paginator_options
@@ -86,10 +83,14 @@ class DoctrineSPS extends SPS
             }
         }
         if($select = trim($select, ',')){
-            $q = strstr($this->query->getQuery()->getDql(), " FROM ");
-            $q = sprintf("SELECT %s %s", $select, $q);
+            $this->query->resetDQLParts(array(
+                "groupBy",
+                "having",
+                "orderBy"
+            ));
+            $this->query->add('select', $select);
 
-            $sumQuery = $this->getEm()->createQuery($q)
+            $sumQuery = $this->getEm()->createQuery($this->query->getQuery()->getDql())
                 ->setParameters($this->query->getQuery()->getParameters())
                 ->setMaxResults(1);
 

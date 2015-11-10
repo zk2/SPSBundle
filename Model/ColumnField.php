@@ -114,4 +114,15 @@ class ColumnField
     {
         return ('noalias' == $this->alias ? null : $this->alias.'.').$this->field;
     }
+
+    /**
+     * @return string
+     */
+    public function getSortAlias()
+    {
+        if($sa = $this->getAttr('sort_alias')){
+            return $sa;
+        }
+        return $this->getAliasDotName();
+    }
 }
