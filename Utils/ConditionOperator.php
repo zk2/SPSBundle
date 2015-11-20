@@ -85,6 +85,7 @@ class ConditionOperator
      */
     public static function getOperator($signature)
     {
+        if(!$signature) return null;
         foreach(self::$operators as $operator){
             $tmp = each($operator);
             reset($operator);
