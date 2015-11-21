@@ -91,7 +91,7 @@ abstract class QueryBuilder
 
             if (in_array($condition_operator, array('IS NULL', 'IS NOT NULL'))) {
                 $condition .= sprintf('%s (%s.%s %s)', $or_and, $alias, $field, $condition_operator);
-            } else {
+            } elseif (trim((string)$child->get('name')->getData()) != '') {
                 $get_value = $child->get('name')->getData();
                 $operator = ConditionOperator::getOperator($condition_operator);
                 $alias_dot_field = 'noalias' == $alias ? $field : sprintf("%s.%s", $alias, $field);
