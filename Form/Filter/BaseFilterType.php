@@ -81,5 +81,5 @@ abstract class BaseFilterType extends AbstractType
     /**
      * @return string
      */
-    abstract public function getName();
+    public function getName(){}
 }
