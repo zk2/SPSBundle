@@ -383,7 +383,7 @@ abstract class SPS
                 $this->filterForm->setData($data);
                 $this->queryBuilder->buildQuery($this->filterForm, $this->query);
             } elseif (count($this->defaultFilters)) {
-                $this->buildQuery->buildQuery($this->filterForm, $this->query);
+                $this->queryBuilder->buildQuery($this->filterForm, $this->query);
             }
         }
     }
