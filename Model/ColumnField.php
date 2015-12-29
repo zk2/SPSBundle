@@ -116,6 +116,8 @@ class ColumnField
     }
 
     /**
+     * getSortAlias
+     * 
      * @return string
      */
     public function getSortAlias()
