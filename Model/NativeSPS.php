@@ -65,7 +65,8 @@ class NativeSPS extends SPS
         $cnt = 0;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('cnt', 'cnt');
-        $q = sprintf("SELECT COUNT(*) cnt FROM(%s) zzz", $this->query->getSQL());
+        $queryForCnt = $this->replaceRules ? $this->replaceQuery() : $this->query->getSQL();
+        $q = sprintf("SELECT COUNT(*) cnt FROM (%s) zzz", $queryForCnt);
         $cntQuery = $this->getEm()->createNativeQuery($q, $rsm)->setParameters($this->query->getParameters());
         try {
             $cnt = $cntQuery->getSingleScalarResult();
