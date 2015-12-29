@@ -105,6 +105,11 @@ abstract class SPS
      * @var array
      */
     protected $options = array();
+    
+    /**
+     * @var array
+     */
+    protected $replaceRules = array('from' => null, 'to' => null);
 
     /**
      * @var array
@@ -454,7 +459,7 @@ abstract class SPS
      */
     protected function replaceQuery(array $rules)
     {
-        if(!isset($rules['from']) or !isset($rules['to'])){
+        if(null === $this->replaceRules['from'] or null === $this->replaceRules['to']){
             return $this->query;
         }
         
@@ -464,6 +469,21 @@ abstract class SPS
             $query = $this->query->getQuery()->getSQL();
         } 
         
-        return str_replase($rules['from'], $rules['to'], $query);
+        return str_replase($this->replaceRules['from'], $this->replaceRules['to'], $query);
+    }
+
+    /**
+     * Set replace rules
+     *
+     * @param $from
+     * @param $to
+     * @return $this
+     */
+    protected function setReplaceRules($from, $to)
+    {
+        $this->replaceRules['from'] = $from;
+        $this->replaceRules['to'] = $to;
+        
+        return $this;
     }
 }
