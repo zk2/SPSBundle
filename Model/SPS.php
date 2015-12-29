@@ -469,7 +469,7 @@ abstract class SPS
             return $query;
         }
         
-        return str_replase($this->replaceRules['from'], $this->replaceRules['to'], $query);
+        return str_replace($this->replaceRules['from'], $this->replaceRules['to'], $query);
     }
 
     /**
