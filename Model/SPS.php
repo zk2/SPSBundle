@@ -459,7 +459,7 @@ abstract class SPS
      */
     protected function replaceQuery()
     {
-        if($this->query instanseof \Doctrine\ORM\NativeQuery){
+        if($this->query instanceof \Doctrine\ORM\NativeQuery){
             $query = $this->query->getSQL();
         } else {
             $query = $this->query->getQuery()->getSQL();
