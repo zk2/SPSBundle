@@ -455,19 +455,19 @@ abstract class SPS
     /**
      * replace query
      *
-     * @return array
+     * @return string
      */
-    protected function replaceQuery(array $rules)
+    protected function replaceQuery()
     {
-        if(null === $this->replaceRules['from'] or null === $this->replaceRules['to']){
-            return $this->query;
-        }
-        
         if($this->query instanseof \Doctrine\ORM\NativeQuery){
             $query = $this->query->getSQL();
         } else {
             $query = $this->query->getQuery()->getSQL();
         } 
+        
+        if(null === $this->replaceRules['from'] or null === $this->replaceRules['to']){
+            return $query;
+        }
         
         return str_replase($this->replaceRules['from'], $this->replaceRules['to'], $query);
     }
