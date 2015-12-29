@@ -479,7 +479,7 @@ abstract class SPS
      * @param $to
      * @return $this
      */
-    protected function setReplaceRules($from, $to)
+    public function setReplaceRules($from, $to)
     {
         $this->replaceRules['from'] = $from;
         $this->replaceRules['to'] = $to;
