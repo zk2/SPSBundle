@@ -437,8 +437,33 @@ abstract class SPS
         );
     }
 
+    /**
+     * get Autosum
+     *
+     * @return mixed
+     */
     protected function getAutosum()
     {
         return $this->autosum;
+    }
+
+    /**
+     * replace query
+     *
+     * @return array
+     */
+    protected function replaceQuery(array $rules)
+    {
+        if(!isset($rules['from']) or !isset($rules['to'])){
+            return $this->query;
+        }
+        
+        if($this->query instanseof \Doctrine\ORM\NativeQuery){
+            $query = $this->query->getSQL();
+        } else {
+            $query = $this->query->getQuery()->getSQL();
+        } 
+        
+        return str_replase($rules['from'], $rules['to'], $query);
     }
 }
