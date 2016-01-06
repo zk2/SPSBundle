@@ -65,7 +65,7 @@
                     {% set link_javascript_class = column.getAttr('link_class') %}
                     {% set link_javascript_lid = column.getAttr('link_javascript','lid', 'id') %}
                     {% set jid = attribute(result, link_javascript_lid) %}
-                    {% set link_style = link_class ? '' : ' style="text-decoration:underline;" ' %}
+                    {% set link_style = link_javascript_class ? '' : ' style="text-decoration:underline;" ' %}
                     {% set value = '<a data-id="'~jid~'"' ~ link_style ~ ' class="'~link_javascript_class~'" href="javascript:void(0)">' ~ value ~ '</a>' %}
                 {% endif %}
 
