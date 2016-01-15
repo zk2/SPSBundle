@@ -89,10 +89,14 @@ abstract class QueryBuilder
             $or_and = ($child->has('condition_pattern')) ? $child->get('condition_pattern')->getData() : ' ';
             $condition_operator = $child->get('condition_operator')->getData();
 
+            $get_value = $child->get('name')->getData();
+            if (!($get_value instanceof \DateTime)) {
+                $get_value = trim((string)$get_value);
+            }
+
             if (in_array($condition_operator, array('IS NULL', 'IS NOT NULL'))) {
                 $condition .= sprintf('%s (%s.%s %s)', $or_and, $alias, $field, $condition_operator);
-            } elseif (trim((string)$child->get('name')->getData()) != '') {
-                $get_value = $child->get('name')->getData();
+            } elseif ($get_value) {
                 $operator = ConditionOperator::getOperator($condition_operator);
                 $alias_dot_field = 'noalias' == $alias ? $field : sprintf("%s.%s", $alias, $field);
                 if($get_value instanceof \DateTime){
@@ -101,7 +105,7 @@ abstract class QueryBuilder
                         $or_and,
                         $this->getD($get_value, $child->getConfig(), $operator, $alias_dot_field)
                     );
-                } elseif($get_value = trim((string)$get_value)){
+                } else {
                     $value = sprintf(str_replace('x', '', $condition_operator), $get_value);
                     $condition .= sprintf(
                         '%s %s %s :%s ',
