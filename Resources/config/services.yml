@@ -10,29 +10,29 @@ services:
         class: Zk2\SPSBundle\Model\SPS
         abstract: true
         arguments:
-            - @request_stack
-            - @doctrine
-            - @knp_paginator
-            - @form.factory
-            - @router
-            - @zk2.sps.form_filter.session
+            - '@request_stack'
+            - '@doctrine'
+            - '@knp_paginator'
+            - '@form.factory'
+            - '@router'
+            - '@zk2.sps.form_filter.session'
             - %zk2_sps.options%
 
     zk2.sps.doctrine:
         class: Zk2\SPSBundle\Model\DoctrineSPS
         parent: zk2.sps.abstract
         calls:
-            - [setQueryBuilder, ["@zk2.sps.query_builder.doctrine"]]
+            - [setQueryBuilder, ['@zk2.sps.query_builder.doctrine']]
 
     zk2.sps.native:
         class: Zk2\SPSBundle\Model\NativeSPS
         parent: zk2.sps.abstract
         calls:
-            - [setQueryBuilder, ["@zk2.sps.query_builder.native"]]
+            - [setQueryBuilder, ['@zk2.sps.query_builder.native']]
 
     zk2.sps.form_filter.session:
         class: Zk2\SPSBundle\Utils\FormFilterSession
-        arguments: [@doctrine, @session]
+        arguments: ['@doctrine', '@session']
 
 
     # form type
