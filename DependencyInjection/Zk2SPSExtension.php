@@ -60,7 +60,7 @@ class Zk2SPSExtension extends Extension implements PrependExtensionInterface
                 case 'twig':
                     $container->prependExtensionConfig(
                         $name,
-                        array('form' => array('resources' => array($this->formTemplate)))
+                        array('form_themes' => array($this->formTemplate))
                     );
                     break;
             }
