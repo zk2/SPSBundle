@@ -27,10 +27,10 @@ class Zk2SPSExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
 
         foreach ($config as $parameter => $value) {
-            $container->setParameter('zk2_sps.'.$parameter, $value);
+            $container->setParameter('zk2_sps.' . $parameter, $value);
         }
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 
@@ -40,8 +40,6 @@ class Zk2SPSExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container)
     {
         $bundles = $container->getParameter('kernel.bundles');
-
-        $configs = $container->getExtensionConfig($this->getAlias());
 
         if (true === isset($bundles['TwigBundle']) && true === isset($bundles['Zk2SPSBundle'])) {
             $this->configureTwigBundle($container);

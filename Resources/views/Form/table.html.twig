@@ -1,4 +1,4 @@
-{% set default_number_format = [0,'.',''] %}
+{% set default_number_format = number_format is defined ? number_format : [0,'.',''] %}
 {% set total_tz = app.session.get('timezone') %}
 <table id="sps_table" class="table table-striped table-condensed table-hover table-bordered">
     <thead>
@@ -37,10 +37,16 @@
                 {% endif %}
 
                 {% if column.type == 'boolean' %}
-                    {% if column.getAttr('revers') %}
-                        {% set value = value ? 'no'|trans({}, 'sps') : 'yes'|trans({}, 'sps') %}
+                    {% set revers = column.getAttr('revers') %}
+                    {% if revers %}
+                        {% set total_status = value ? 'unchecked' : 'check' %}
                     {% else %}
-                        {% set value = value ? 'yes'|trans({}, 'sps') : 'no'|trans({}, 'sps') %}
+                        {% set total_status = value ? 'check' : 'unchecked' %}
+                    {% endif %}
+                    {% if column.getAttr('type_view') == 'icon' %}
+                        {% set value = '<i class="glyphicon glyphicon-' ~ total_status ~ '"></i>' %}
+                    {% else %}
+                        {% set value = total_status == 'unchecked' ? 'no'|trans({}, 'sps') : 'yes'|trans({}, 'sps') %}
                     {% endif %}
                 {% endif %}
 

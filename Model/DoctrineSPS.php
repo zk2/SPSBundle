@@ -2,8 +2,6 @@
 
 namespace Zk2\SPSBundle\Model;
 
-use Zk2\SPSBundle\Model\SPS;
-
 
 /**
  * Class DoctrineSPS
@@ -34,29 +32,29 @@ class DoctrineSPS extends SPS
      */
     protected function getPaginator()
     {
-        $pn = $this->paginator->paginate(array());
-        $sort_name = $pn->getPaginatorOption('sortFieldParameterName');
-        $sort_direction_name = $pn->getPaginatorOption('sortDirectionParameterName');
-        $page_name = $pn->getPaginatorOption('pageParameterName');
-        $page = $this->request->query->getInt($page_name, 1);
+        $paginatorTmp = $this->paginator->paginate(array());
+        $sortName = $paginatorTmp->getPaginatorOption('sortFieldParameterName');
+        $sortDirectionName = $paginatorTmp->getPaginatorOption('sortDirectionParameterName');
+        $pageName = $paginatorTmp->getPaginatorOption('pageParameterName');
+        $page = $this->request->query->getInt($pageName, 1);
 
-        if ($this->request->query->has($sort_name)) {
-            $this->session->set('_sps_sort_'.$this->ukey, array(
-                'defaultSortFieldName' => $this->request->query->get($sort_name),
-                'defaultSortDirection' => $this->request->query->get($sort_direction_name, 'asc')
+        if ($this->request->query->has($sortName)) {
+            $this->session->set('_sps_sort_' . $this->ukey, array(
+                'defaultSortFieldName' => $this->request->query->get($sortName),
+                'defaultSortDirection' => $this->request->query->get($sortDirectionName, 'asc')
             ));
         }
 
-        if ($this->request->query->has($page_name)) {
-            $this->session->set('_sps_pager_'.$this->ukey, $page);
-        } elseif ($this->session->has('_sps_pager_'.$this->ukey)) {
-            $page = $this->session->get('_sps_pager_'.$this->ukey);
+        if ($this->request->query->has($pageName)) {
+            $this->session->set('_sps_pager_' . $this->ukey, $page);
+        } elseif ($this->session->has('_sps_pager_' . $this->ukey)) {
+            $page = $this->session->get('_sps_pager_' . $this->ukey);
         }
-        if($sort = $this->session->get('_sps_sort_'.$this->ukey)){
+
+        if ($sort = $this->session->get('_sps_sort_' . $this->ukey)) {
             $this->query->addOrderBy($sort['defaultSortFieldName'], $sort['defaultSortDirection']);
-        } elseif (!$sort and isset($this->paginator_options['default_sort']) and $this->paginator_options['default_sort']
-        ) {
-            foreach ($this->paginator_options['default_sort'] as $field => $type) {
+        } elseif (!$sort and isset($this->paginatorOptions['default_sort']) and $this->paginatorOptions['default_sort']) {
+            foreach ($this->paginatorOptions['default_sort'] as $field => $type) {
                 $this->query->addOrderBy($field, $type);
             }
         }
@@ -64,8 +62,8 @@ class DoctrineSPS extends SPS
         $pagination = $this->paginator->paginate(
             $this->query->getQuery()->getResult(),
             $page,
-            $this->paginator_limit,
-            $this->paginator_options
+            $this->paginatorLimit,
+            $this->paginatorOptions
         );
 
         $pagination->setTemplate($this->options['pagination_template']);
@@ -77,12 +75,13 @@ class DoctrineSPS extends SPS
     protected function getAutosum()
     {
         $select = '';
-        foreach($this->columns as $coll){
-            if($alias = $coll->getAttr('autosum')){
+        /** @var ColumnField $coll */
+        foreach ($this->columns as $coll) {
+            if ($alias = $coll->getAttr('autosum')) {
                 $select .= sprintf("SUM(%s) AS %s,", $coll->getAliasDotName(), $alias);
             }
         }
-        if($select = trim($select, ',')){
+        if ($select = trim($select, ',')) {
             $this->query->resetDQLParts(array(
                 "groupBy",
                 "having",

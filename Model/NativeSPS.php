@@ -40,32 +40,31 @@ class NativeSPS extends SPS
         $pagination = $this->paginator->paginate(
             array(),
             1,
-            $this->paginator_limit,
-            $this->session->get('_sps_sort_'.$this->ukey, array())
+            $this->paginatorLimit,
+            $this->session->get('_sps_sort_' . $this->ukey, array())
         );
 
-        $sort_name = $pagination->getPaginatorOption('sortFieldParameterName');
-        $sort_direction_name = $pagination->getPaginatorOption('sortDirectionParameterName');
-        $page_name = $pagination->getPaginatorOption('pageParameterName');
-        $page = $this->request->query->getInt($page_name, 1);
+        $sortName = $pagination->getPaginatorOption('sortFieldParameterName');
+        $sortDirectionName = $pagination->getPaginatorOption('sortDirectionParameterName');
+        $pageName = $pagination->getPaginatorOption('pageParameterName');
+        $page = $this->request->query->getInt($pageName, 1);
 
-        if ($this->request->query->has($sort_name)) {
-            $this->session->set('_sps_sort_'.$this->ukey, array(
-                'defaultSortFieldName' => $this->request->query->get($sort_name),
-                'defaultSortDirection' => $this->request->query->get($sort_direction_name, 'asc')
+        if ($this->request->query->has($sortName)) {
+            $this->session->set('_sps_sort_' . $this->ukey, array(
+                'defaultSortFieldName' => $this->request->query->get($sortName),
+                'defaultSortDirection' => $this->request->query->get($sortDirectionName, 'asc')
             ));
         }
 
-        if ($this->request->query->has($page_name)) {
-            $this->session->set('_sps_pager_'.$this->ukey, $page);
-        } elseif ($this->session->has('_sps_pager_'.$this->ukey)) {
-            $page = $this->session->get('_sps_pager_'.$this->ukey);
+        if ($this->request->query->has($pageName)) {
+            $this->session->set('_sps_pager_' . $this->ukey, $page);
+        } elseif ($this->session->has('_sps_pager_' . $this->ukey)) {
+            $page = $this->session->get('_sps_pager_' . $this->ukey);
         }
 
-        $cnt = 0;
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('cnt', 'cnt');
-        $queryForCnt = $this->replaceRules ? $this->replaceQuery() : $this->query->getSQL();
+        $queryForCnt = $this->replaceQuery();
         $q = sprintf("SELECT COUNT(*) cnt FROM (%s) zzz", $queryForCnt);
         $cntQuery = $this->getEm()->createNativeQuery($q, $rsm)->setParameters($this->query->getParameters());
         try {
@@ -76,21 +75,21 @@ class NativeSPS extends SPS
 
         $sql = $this->query->getSQL();
 
-        if ($sort = $this->session->get('_sps_sort_'.$this->ukey)) {
-            $sql .= ' ORDER BY '.$sort['defaultSortFieldName'].' '.$sort['defaultSortDirection'];
-        } elseif (isset($this->paginator_options['default_sort']) and $this->paginator_options['default_sort']) {
+        if ($sort = $this->session->get('_sps_sort_' . $this->ukey)) {
+            $sql .= ' ORDER BY ' . $sort['defaultSortFieldName'] . ' ' . $sort['defaultSortDirection'];
+        } elseif (isset($this->paginatorOptions['default_sort']) and $this->paginatorOptions['default_sort']) {
             $sql .= ' ORDER BY ';
-            foreach ($this->paginator_options['default_sort'] as $field => $type) {
-                $sql .= $field.' '.$type.',';
+            foreach ($this->paginatorOptions['default_sort'] as $field => $type) {
+                $sql .= $field . ' ' . $type . ',';
             }
             $sql = trim($sql, ',');
         }
 
-        $offset = $this->paginator_limit * ($page - 1);
-        $this->query->setSQL($sql.' LIMIT '.$this->paginator_limit.' OFFSET '.$offset);
+        $offset = $this->paginatorLimit * ($page - 1);
+        $this->query->setSQL($sql . ' LIMIT ' . $this->paginatorLimit . ' OFFSET ' . $offset);
 
         $pagination->setCurrentPageNumber($page);
-        $pagination->setItemNumberPerPage($this->paginator_limit);
+        $pagination->setItemNumberPerPage($this->paginatorLimit);
         $pagination->setTotalItemCount($cnt);
         $pagination->setItems($this->query->getResult());
 
@@ -104,13 +103,14 @@ class NativeSPS extends SPS
     {
         $select = '';
         $rsm = new ResultSetMapping();
-        foreach($this->columns as $coll){
-            if($alias = $coll->getAttr('autosum')){
+        /** @var ColumnField $coll */
+        foreach ($this->columns as $coll) {
+            if ($alias = $coll->getAttr('autosum')) {
                 $select .= sprintf("SUM(%s) AS %s,", $coll->getAliasDotName(), $alias);
                 $rsm->addScalarResult($alias, $alias);
             }
         }
-        if($select = trim($select, ',')){
+        if ($select = trim($select, ',')) {
             $q = $this->query->getSQL();
             $q = stristr($q, " FROM ");
             $q_without_group_by = stristr($q, "GROUP BY");

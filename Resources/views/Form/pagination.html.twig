@@ -10,8 +10,9 @@
     <li>
         <span>
         {% set cou = ((totalCount % 10 == 1) and (totalCount % 100 != 11)) ? 0
-        : (((totalCount % 10 >= 2) and (totalCount % 10 <= 4) and
-        ((totalCount % 100 < 10) or (totalCount % 100 >= 20))) ? 1 : 2) %}
+            : (((totalCount % 10 >= 2) and (totalCount % 10 <= 4) and
+            ((totalCount % 100 < 10) or (totalCount % 100 >= 20))) ? 1 : 2)
+        %}
             {{ totalCount ~ ' ' }}
             {% transchoice totalCount with {'%cou%':cou} from "sps" %}paginator.results{% endtranschoice %}
             {% if totalCount > 0 %}

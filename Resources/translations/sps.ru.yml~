@@ -6,5 +6,25 @@ paginator.nextPageText: 'Следующая страница'
 paginator.lastPageText: 'Последняя страница'
 filter.filter: Фильтр
 filter.reset: Сброс
-yes: Да
-no: Нет
+'yes': Да
+'no': Нет
+condition_pattern.OR: или
+condition_pattern.AND: и
+operator.eq: равно
+operator.not_eq: 'не равно'
+operator._like_: содержит
+operator.not__like_: 'не содержит'
+operator.like_: 'начинается с'
+operator._like: 'заканчивается на'
+operator.not_like_: 'не начинается с'
+operator.not__like: 'не заканчивается на'
+operator.less: меньше
+operator.less_eq: 'меньше или равно'
+operator.more: больше
+operator.more_eq: 'больше или равно'
+operator.is_empty: пусто
+operator.is_not_empty: 'не пусто'
+operator.bool_: равно
+operator.between: между
+operator.between.from: с
+operator.between.to: по

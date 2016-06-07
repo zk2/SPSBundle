@@ -17,8 +17,6 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $options = array('pagination_template', 'sortable_template', 'timezone_db');
-
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('zk2_sps');
 

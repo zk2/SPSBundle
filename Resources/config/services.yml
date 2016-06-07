@@ -16,7 +16,7 @@ services:
             - '@form.factory'
             - '@router'
             - '@zk2.sps.form_filter.session'
-            - %zk2_sps.options%
+            - '%zk2_sps.options%'
 
     zk2.sps.doctrine:
         class: Zk2\SPSBundle\Model\DoctrineSPS
@@ -39,19 +39,28 @@ services:
 
     zk2.sps.date_bootstrap.type:
         class:  Zk2\SPSBundle\Form\Type\DateBootstrapType
-        arguments: [%locale%]
+        arguments: ['%locale%']
         tags:
             - { name: form.type, alias: zk2_sps_date_bootstrap_type }
 
-    zk2.sps.text.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\TextFilterType
-        arguments: ['text']
+    zk2.sps.date_range_bootstrap.type:
+        class:  Zk2\SPSBundle\Form\Type\DateRangeBootstrapType
+        arguments: ['%locale%', true]
         tags:
-            - { name: form.type, alias: zk2_sps_text_filter_type }
+            - { name: form.type, alias: zk2_sps_date_range_bootstrap_type }
+
+    zk2.sps.date.filter.type:
+        class:  Zk2\SPSBundle\Form\Filter\DateFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_date_filter_type }
+
+    zk2.sps.date_range.filter.type:
+        class:  Zk2\SPSBundle\Form\Filter\DateRangeFilterType
+        tags:
+            - { name: form.type, alias: zk2_sps_date_range_filter_type }
 
     zk2.sps.string.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\TextFilterType
-        arguments: ['string']
+        class:  Zk2\SPSBundle\Form\Filter\StringFilterType
         tags:
             - { name: form.type, alias: zk2_sps_string_filter_type }
 
@@ -69,8 +78,3 @@ services:
         class:  Zk2\SPSBundle\Form\Filter\BooleanFilterType
         tags:
             - { name: form.type, alias: zk2_sps_boolean_filter_type }
-
-    zk2.sps.date.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\DateFilterType
-        tags:
-            - { name: form.type, alias: zk2_sps_date_filter_type }

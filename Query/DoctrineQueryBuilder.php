@@ -20,9 +20,9 @@ class DoctrineQueryBuilder extends QueryBuilder
     {
         $this->query = $query;
 
-        $group_child = $this->groupChild($form);
+        $groupChild = $this->groupChild($form);
 
-        foreach ($group_child as $children) {
+        foreach ($groupChild as $children) {
             if ($condition = $this->applyFilter($children)) {
                 $query->andWhere($condition);
             }

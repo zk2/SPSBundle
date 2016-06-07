@@ -5,6 +5,7 @@ namespace Zk2\SPSBundle\Form\Filter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zk2\SPSBundle\Utils\ConditionOperator;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class ChoiceFilterType
@@ -13,48 +14,49 @@ use Zk2\SPSBundle\Utils\ConditionOperator;
 class ChoiceFilterType extends BaseFilterType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
-        $builder->add(
-            'name',
-            'choice',
-            array(
-                'required' => false,
-                'choices' => $options['choices'],
-                'attr' => array(
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
-                    'data-index' => $options['level'],
-                ),
-            )
-        );
+        $builder->add('name', ChoiceType::class, array(
+            'required' => false,
+            'choices' => $options['choices'],
+            'attr' => array(
+                'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
+                'data-index' => $options['level'],
+            ),
+            'label' => false,
+        ));
     }
 
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(
-            array(
-                'condition_operator_hidden' => 'eq',
-                'condition_operators' => ConditionOperator::eqNotEq(),
-                'choices' => array(),
-            )
-        );
+        $resolver->setDefaults(array(
+            'condition_operators' => ConditionOperator::eqNotEq(),
+            'choices' => array(),
+        ));
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'zk2_sps_choice_filter_type';
+    }
+
+    /**
+     * < 2.8
      */
     public function getName()
     {
-        return 'zk2_sps_choice_filter_type';
+        return $this->getBlockPrefix();
     }
 }

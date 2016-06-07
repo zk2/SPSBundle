@@ -1,8 +1,8 @@
-{% set clsp = colspan is defined ? colspan : 2 %}
-<link href="{{ asset('/bundles/zk2sps/css/sps-style.css') }}" rel="stylesheet"/>
-<script src="{{ asset('/bundles/zk2sps/js/sps.js') }}"></script>
-<div class="sps-area">
+{% form_theme filter_form 'bootstrap_3_layout.html.twig' %}
 
+{% set td_colspan = colspan is defined ? colspan : 2 %}
+
+<div class="sps-area">
     <div id="sps_filter">
         <nav class="navbar" role="navigation">
             <a class="navbar-brand" data-toggle="collapse" href="#collapseSPS">
@@ -12,30 +12,25 @@
         </nav>
         <div id="collapseSPS" class="accordion-body collapse">
             <div class="accordion-inner">
-                {{ form_start(filter_form, {'attr': {'method':'POST','action':path(app.request.get('_route'),app.request.get('_route_params')),'class':"form-inline"}}) }}
+                {{ form_start(filter_form, {'attr': {'class':"form-inline"}}) }}
                 <table class="table table-condensed">
                     <tr>
                         {% set ind = 0 %}
-                        {% set field = '' %}
-                        {% for key,form in filter_form.children %}
-                            {% if field != '' and field != key|slice(0, -1) and ind % clsp == 0 %}
-                                </tr><tr>
-                            {% endif %}
-                            {% if field == '' %}<td>{% endif %}
-                            {% if key | slice(-1) == '0' %}
-                                 {% set ind = ind + 1 %}
-                                 {% if field != '' %}</td><td>{% endif %}
-                                 {{ form_label(form) }}
-                            {% endif %}
-                            {% set field = key|slice(0, -1) %}
-                            {{ form_widget(form) }}
+                        {% for key,childs in group_field %}
+                            {% set ind = ind + 1 %}
+                            <td>
+                                {% for num,child in childs %}
+                                    {% if num == 0 %}{{ form_label(child) }}{% endif %}
+                                    {{ form_widget(child) }}
+                                {% endfor %}
+                            </td>
+                            {% if ind % td_colspan == 0 %}</tr><tr>{% endif %}
                         {% endfor %}
-                        </td>
                     </tr>
                     <tr>
-                        <th class="navbar" colspan="{{ clsp }}">
+                        <th class="navbar" colspan="{{ td_colspan }}">
                             <a class="btn btn-xs btn-danger"
-                               href="{{ path(app.request.get('_route'),app.request.get('_route_params')) }}?_sps_reset=1"
+                               href="{{ path(app.request.get('_route'),app.request.get('_route_params')|merge({ '_sps_reset': '1' })) }}"
                                style="margin-right: 20px;">
                                 {% trans with {} from "sps" %}filter.reset{% endtrans %}
                             </a>

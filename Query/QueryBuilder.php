@@ -3,8 +3,10 @@
 namespace Zk2\SPSBundle\Query;
 
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\NativeQuery;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormConfigInterface;
+use Zk2\SPSBundle\Exceptions\InvalidArgumentException;
+use Zk2\SPSBundle\Model\ColumnField;
 use Zk2\SPSBundle\Utils\ConditionOperator;
 
 /**
@@ -21,7 +23,7 @@ abstract class QueryBuilder
     /**
      * @var
      */
-    protected $platform_name;
+    protected $platformName;
 
     /**
      * @var array
@@ -31,8 +33,8 @@ abstract class QueryBuilder
     /**
      * Build a filter query.
      *
-     * @param \Symfony\Component\Form\Form $form
-     * @param \Doctrine\ORM\QueryBuilder $query
+     * @param Form $form
+     * @param $query
      */
     abstract public function buildQuery(Form $form, $query);
 
@@ -42,10 +44,10 @@ abstract class QueryBuilder
     protected function getPlatformName()
     {
         if ($this->query instanceof AbstractQuery) {
-            $this->platform_name = $this->query->getEntityManager()->getConnection()->getDatabasePlatform()->getName();
+            $this->platformName = $this->query->getEntityManager()->getConnection()->getDatabasePlatform()->getName();
         }
 
-        return $this->platform_name;
+        return $this->platformName;
     }
 
     /**
@@ -54,63 +56,65 @@ abstract class QueryBuilder
      */
     protected function groupChild(Form $form)
     {
-        $group_child = array();
+        $groupChild = array();
 
-        $this->platform_name = $this->getPlatformName();
+        //$this->platformName = $this->getPlatformName();
 
+        /** @var Form $child */
         foreach ($form->all() as $child) {
-            $key = $child->getConfig()->getOption('sps_field_alias')
-                .'.'.$child->getConfig()->getOption('sps_field_name');
-            $group_child[$key][] = $child;
+            $key = $child->getConfig()->getOption('sps_field_alias') . '.' . $child->getConfig()->getOption('sps_field_name');
+            $groupChild[$key][] = $child;
         }
 
-        return $group_child;
+        return $groupChild;
     }
 
     /**
-     * @param $children
+     * @param array $children
      * @return string
      */
-    protected function applyFilter($children)
+    protected function applyFilter(array $children)
     {
         $condition = '';
-
+        /** @var Form $child */
         foreach ($children as $i => $child) {
             if ($child->getConfig()->getOption('not_used')) {
                 continue;
             }
-
             $alias = $child->getConfig()->getOption('sps_field_alias');
             $field = $child->getConfig()->getOption('sps_field_name');
-            $form_field_type = $child->getConfig()->getOption('sps_field_type');
-
+            $formFieldType = $child->getConfig()->getOption('sps_field_type');
             $paramName = sprintf('%s_%s_param_%s', $alias, $field, $i);
+            $andOr = ($child->has('condition_pattern')) ? $child->get('condition_pattern')->getData() : ' ';
+            $conditionOperator = $child->get('condition_operator')->getData();
+            $aliasDotField = ColumnField::NOALIAS == $alias ? $field : sprintf("%s.%s", $alias, $field);
 
-            $or_and = ($child->has('condition_pattern')) ? $child->get('condition_pattern')->getData() : ' ';
-            $condition_operator = $child->get('condition_operator')->getData();
-
-            $get_value = $child->get('name')->getData();
-            if (!($get_value instanceof \DateTime)) {
-                $get_value = trim((string)$get_value);
-            }
-
-            if (in_array($condition_operator, array('IS NULL', 'IS NOT NULL'))) {
-                $condition .= sprintf('%s (%s.%s %s)', $or_and, $alias, $field, $condition_operator);
-            } elseif ($get_value) {
-                $operator = ConditionOperator::getOperator($condition_operator);
-                $alias_dot_field = 'noalias' == $alias ? $field : sprintf("%s.%s", $alias, $field);
-                if($get_value instanceof \DateTime){
-                    $condition .= sprintf(
-                        '%s %s ',
-                        $or_and,
-                        $this->getD($get_value, $child->getConfig(), $operator, $alias_dot_field)
-                    );
-                } else {
-                    $value = sprintf(str_replace('x', '', $condition_operator), $get_value);
+            if (in_array($conditionOperator, array('IS NULL', 'IS NOT NULL'))) {
+                $condition .= sprintf('%s (%s %s)', $andOr, $aliasDotField, $conditionOperator);
+            } else {
+                $operator = ConditionOperator::getOperator($conditionOperator);
+                if (in_array($formFieldType, array('dateRange', 'date'))) {
+                    if ('dateRange' == $formFieldType) {
+                        $start = $child->get('name')->get('start')->getData();
+                        $end = $child->get('name')->get('end')->getData();
+                        if ($end and !$start) $start = clone $end;
+                    } else {
+                        $start = $child->get('name')->getData();
+                        $end = null;
+                    }
+                    if ($start instanceof \DateTime) {
+                        $condition .= sprintf(
+                            '%s %s ',
+                            $andOr,
+                            $this->getBuildDateCondition($child->getConfig(), $operator, $aliasDotField, $start, $end)
+                        );
+                    }
+                } elseif($fieldValue = trim((string) $child->get('name')->getData())) {
+                    $value = sprintf(str_replace('x', '', $conditionOperator), $fieldValue);
                     $condition .= sprintf(
                         '%s %s %s :%s ',
-                        $or_and,
-                        $alias_dot_field,
+                        $andOr,
+                        $aliasDotField,
                         $operator,
                         $paramName
                     );
@@ -123,39 +127,82 @@ abstract class QueryBuilder
     }
 
     /**
-     * @param \DateTime $value
-     * @param $config
+     * @param FormConfigInterface $config
      * @param $operator
-     * @param $alias_dot_field
+     * @param $aliasDotField
+     * @param \DateTime $start
+     * @param \DateTime|null $end
      * @return string
+     * @throws InvalidArgumentException
      */
-    protected function getD(\DateTime $value, $config, $operator, $alias_dot_field)
+    protected function getBuildDateCondition(
+        FormConfigInterface $config,
+        $operator,
+        $aliasDotField,
+        \DateTime $start,
+        \DateTime $end = null
+    )
     {
-        $view_timezone = $config->getOption('view_timezone');
-        $model_timezone = $config->getOption('model_timezone');
-        $from = clone $value;
-        if($view_timezone != $model_timezone){
-            $from->setTimezone(new \DateTimeZone($model_timezone));
+        $dateFrom = clone $start;
+        if ($config->getOption('view_timezone') != $config->getOption('model_timezone')) {
+            $dateFrom->setTimezone(new \DateTimeZone($config->getOption('model_timezone')));
         }
-        $to = clone $from;
-        $to->modify((60*60*24-1).' seconds');
-        $f = $from->format('Y-m-d H:i:s');
-        $t = $to->format('Y-m-d H:i:s');
-        switch($operator){
+        $dateFrom->setTime(0,0,0);
+        $dateTo = $end ? clone $end : clone $dateFrom;
+        $dateTo->setTime(23,59,59);
+        $from = $dateFrom->format('Y-m-d H:i:s');
+        $to = $dateTo->format('Y-m-d H:i:s');
+        switch ($operator) {
             case '=':
-                return sprintf("(%s >= '%s' AND %s <= '%s')", $alias_dot_field, $f, $alias_dot_field, $t);
+                return sprintf("(%s >= '%s' AND %s <= '%s')", $aliasDotField, $from, $aliasDotField, $to);
             case '!=':
-                return sprintf("(%s < '%s' AND %s > '%s')", $alias_dot_field, $f, $alias_dot_field, $t);
+                return sprintf("(%s < '%s' OR %s > '%s')", $aliasDotField, $from, $aliasDotField, $to);
             case '>=':
-                return sprintf("(%s >= '%s')", $alias_dot_field, $f);
+                return sprintf("(%s >= '%s')", $aliasDotField, $from);
             case '<=':
-                return sprintf("(%s <= '%s')", $alias_dot_field, $t);
+                return sprintf("(%s <= '%s')", $aliasDotField, $to);
             case '>':
-                return sprintf("(%s > '%s')", $alias_dot_field, $t);
+                return sprintf("(%s > '%s')", $aliasDotField, $to);
             case '<':
-                return sprintf("(%s < '%s')", $alias_dot_field, $f);
+                return sprintf("(%s < '%s')", $aliasDotField, $from);
         }
 
-        throw new \InvalidArgumentException('Operator "'.$operator.'" not valid...');
+        throw new InvalidArgumentException('Operator "' . $operator . '" is not valid...');
     }
+
+    /**
+     * @param \DateTime $value
+     * @param FormConfigInterface $config
+     * @param $operator
+     * @param $aliasDotField
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    /*protected function getBuildDateCondition(\DateTime $value, FormConfigInterface $config, $operator, $aliasDotField)
+    {
+        $dateFrom = clone $value;
+        if ($config->getOption('view_timezone') != $config->getOption('model_timezone')) {
+            $dateFrom->setTimezone(new \DateTimeZone($config->getOption('model_timezone')));
+        }
+        $dateTo = clone $dateFrom;
+        $dateTo->modify((60 * 60 * 24 - 1) . ' seconds');
+        $from = $dateFrom->format('Y-m-d H:i:s');
+        $to = $dateTo->format('Y-m-d H:i:s');
+        switch ($operator) {
+            case '=':
+                return sprintf("(%s >= '%s' AND %s <= '%s')", $aliasDotField, $from, $aliasDotField, $to);
+            case '!=':
+                return sprintf("(%s < '%s' AND %s > '%s')", $aliasDotField, $from, $aliasDotField, $to);
+            case '>=':
+                return sprintf("(%s >= '%s')", $aliasDotField, $from);
+            case '<=':
+                return sprintf("(%s <= '%s')", $aliasDotField, $to);
+            case '>':
+                return sprintf("(%s > '%s')", $aliasDotField, $to);
+            case '<':
+                return sprintf("(%s < '%s')", $aliasDotField, $from);
+        }
+
+        throw new InvalidArgumentException('Operator "' . $operator . '" is not valid...');
+    }*/
 }

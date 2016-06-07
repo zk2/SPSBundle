@@ -11,11 +11,27 @@
 #sps_filter .zk2-sps-filter-field,
 #sps_filter .zk2-sps-filter-condition-pattern,
 #sps_filter .zk2-sps-filter-condition-operator {
-    font-size: 10px;
-    height: 20px;
+    /*font-size: 10px;*/
+    /*height: 20px;*/
     line-height: 1.5;
-    padding: 2px;
+    /*padding: 2px;*/
     margin-top: 5px;
+}
+
+#sps_filter .zk2-sps-filter-date {
+    display: inline-block;
+}
+
+#sps_filter .zk2-sps-filter-date-range {
+    display: inline-block;
+    padding-left: 5px;
+}
+
+#sps_filter .zk2-sps-filter-date-range,
+#sps_filter .zk2-sps-filter-date-field{
+    text-align: left !important;
+    max-width: 100px;
+    width: 100px;
 }
 
 #sps_filter .zk2-sps-filter-condition-pattern {
@@ -34,12 +50,12 @@
 
 #sps_filter .input-group-addon {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    padding: 0px;
+    width: 30px;
+    height: 30px;
+    /*padding: 0px;*/
     cursor: pointer;
-    margin-left: -20px;
-    margin-right: 2px;
+   /* margin-left: -30px;
+    margin-right: 2px;*/
     margin-top: 5px;
 }
 
@@ -77,6 +93,9 @@
 #sps_filter .sps-child-filter-error-mess{
     font-size: 11px;
     color: red;
+}
+#sps_filter input[readonly] {
+    background: white;
 }
 
     /*--------------------*/
@@ -143,6 +162,9 @@
 #sps_table th > .sps-sort-container > .sps-item > .sps-sort > a {
     line-height: 0;
     padding: 0;
+    display: inline-block;
+    width: 7px;
+    height: 4px;
 }
 
 /*--------------------*/
@@ -171,4 +193,9 @@
 
 #sps_table .zk-autosum th:last-child {
     border-right: 0px solid #afafaf;
+}
+
+.datepicker-days .prev,
+.datepicker-days .next {
+    cursor: pointer;
 }

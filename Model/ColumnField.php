@@ -5,79 +5,36 @@ namespace Zk2\SPSBundle\Model;
  * Class ColumnField
  * @package Zk2\SPSBundle\Model
  */
-class ColumnField
+class ColumnField extends AbstractField
 {
-    /**
-     * @var string
-     */
-    protected $alias;
-
-    /**
-     * @var string
-     */
-    protected $field;
-
-    /**
-     * @var string
-     */
-    protected $type;
-
+    const NOALIAS = 'noalias';
+    
     /**
      * @var array
      */
-    protected $attr = array();
-
-    /**
-     * @var array
-     */
-    protected $default_attr = array(
+    protected $defaultAttr = array(
         'sort' => true,
         'autosum' => null,
+        'type_view' => 'icon',
     );
 
     /**
-     * @param $alias
-     * @param $field
-     * @param $type
+     * @param string $fieldAlias
+     * @param string $fieldName
+     * @param string $fieldType
      * @param array $attr
      */
-    public function __construct($alias, $field, $type, array $attr)
+    public function __construct($fieldAlias, $fieldName, $fieldType, array $attr)
     {
-        $this->alias = $alias;
-        $this->field = $field;
-        $this->type = $type;
-        $this->attr = array_merge($this->default_attr, $attr);
-        if($this->type != 'numeric'){
+        parent::__construct($fieldAlias, $fieldName, $fieldType);
+        $this->attr = array_merge($this->defaultAttr, $attr);
+        if ($this->fieldType != 'numeric') {
             $this->attr['autosum'] = null;
         }
     }
 
     /**
-     * @return array
-     */
-    public function getAlias()
-    {
-        return $this->alias;
-    }
-
-    /**
-     * @return array
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    /**
-     * @return array
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return null
+     * @return string
      */
     public function getLabel()
     {
@@ -85,26 +42,11 @@ class ColumnField
     }
 
     /**
-     * @param $name
-     * @param null $subname
-     * @param null $default
-     * @return null
-     */
-    public function getAttr($name, $subname = null, $default = null)
-    {
-        if ($subname) {
-            return (isset($this->attr[$name]) and isset($this->attr[$name][$subname])) ? $this->attr[$name][$subname] : $default;
-        }
-
-        return isset($this->attr[$name]) ? $this->attr[$name] : $default;
-    }
-
-    /**
      * @return string
      */
     public function getMethod()
     {
-        return $this->getAttr('method', null, $this->field);
+        return $this->getAttr('method', null, $this->fieldName);
     }
 
     /**
@@ -112,18 +54,16 @@ class ColumnField
      */
     public function getAliasDotName()
     {
-        return ('noalias' == $this->alias ? null : $this->alias.'.').$this->field;
+        return (self::NOALIAS == $this->fieldAlias ? null : $this->fieldAlias . '.') . $this->fieldName;
     }
 
     /**
-     * getSortAlias
-     * 
      * @return string
      */
     public function getSortAlias()
     {
-        if($sa = $this->getAttr('sort_alias')){
-            return $sa;
+        if ($sortAlias = $this->getAttr('sort_alias')) {
+            return $sortAlias;
         }
         return $this->getAliasDotName();
     }

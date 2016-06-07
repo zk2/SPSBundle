@@ -8,3 +8,23 @@ filter.filter: 'Le filtre'
 filter.reset: 'La faille'
 'yes': Oui
 'no': Non
+condition_pattern.OR: ou
+condition_pattern.AND: même
+operator.eq: equals
+operator.not_eq: 'not equals'
+operator._like_: contains
+operator.not__like_: 'not contains'
+operator.like_: 'begins with'
+operator._like: 'ends with'
+operator.not_like_: 'not begins with'
+operator.not__like: 'not ends with'
+operator.less: 'less than'
+operator.less_eq: 'less than or equal'
+operator.more: 'greater than'
+operator.more_eq: 'greater than or equal'
+operator.is_empty: 'is empty'
+operator.is_not_empty: 'is not empty'
+operator.bool_: equals
+operator.between: between
+operator.between.from: from
+operator.between.to: to

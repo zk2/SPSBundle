@@ -20,15 +20,15 @@ class NativeQueryBuilder extends QueryBuilder
     {
         $this->query = $query;
 
-        $group_child = $this->groupChild($form);
+        $groupChild = $this->groupChild($form);
 
         $sql = $query->getSQL();
 
-        if(false === stripos($sql, ' where ')){
+        if (false === stripos($sql, ' where ')) {
             $sql .= ' WHERE 1 ';
         }
 
-        foreach ($group_child as $field => $child) {
+        foreach ($groupChild as $field => $child) {
             if ($condition = $this->applyFilter($child)) {
                 $sql .= sprintf(" AND (%s) ", $condition);
             }

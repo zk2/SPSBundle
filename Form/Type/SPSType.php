@@ -15,41 +15,21 @@ use Zk2\SPSBundle\Exceptions\InvalidArgumentException;
 class SPSType extends AbstractType
 {
     /**
-     * @var array
-     */
-    protected $array_fields;
-
-    /**
-     * @param array $array_fields
-     * @throws \Exception
-     */
-    public function __construct(array $array_fields)
-    {
-        foreach ($array_fields as $field) {
-            if (!$field instanceof FilterField) {
-                throw new InvalidArgumentException('SPSFilterType::__construct: Field must be instanceof FilterField');
-            }
-        }
-        $this->array_fields = $array_fields;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($this->array_fields as $field) {
+        foreach ($options['array_fields'] as $field) {
+            if (!$field instanceof FilterField) {
+                throw new InvalidArgumentException('SPSFilterType::__construct: Field must be instanceof FilterField');
+            }
             for ($i = 0; $i < $field->getQuantity(); $i++) {
                 $builder->add(
-                    sprintf("%s__%s%u", $field->getAlias(), $field->getField(), $i),
-                    sprintf("zk2_sps_%s_filter_type", $field->getType()),
-                    array_merge(
-                        $field->getAttributes(),
-                        array('level' => $i)
-                    )
+                    sprintf("%s__%s__%u", $field->getAlias(), $field->getField(), $i),
+                    $field->getFormClass(), //sprintf("zk2_sps_%s_filter_type", $field->getType()),
+                    array_merge($field->getAttributes(), array('level' => $i))
                 );
-                if ($field->getAttr('only_one_main_field')) {
+                if ($field->getAttr('single_field')) {
                     break;
                 }
             }
@@ -57,22 +37,29 @@ class SPSType extends AbstractType
     }
 
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'csrf_protection' => false,
-            )
-        );
+        $resolver->setDefaults(array(
+            'csrf_protection' => false,
+            'array_fields' => array(),
+        ));
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'zk2_sps_builder_filter_type';
+    }
+
+    /**
+     * < 2.8
      */
     public function getName()
     {
-        return 'zk2_sps_builder_filter_type';
+        return $this->getBlockPrefix();
     }
 }

@@ -1,90 +1,47 @@
 {% block zk2_sps_date_bootstrap_type_widget %}
+    {% set json = [] %}
+    {% for key,val in SPSDateSetting %}
+        {% set json = json|merge([key ~ ':' ~ val]) %}
+    {% endfor %}
     {% spaceless %}
-        <div class="input-group-sm date" id="{{ id }}_d">
+        <div class="input-group-sm date zk2-sps-filter-date" id="{{ id }}_d">
             {{ block('form_widget_simple') }}
             <span class="input-group-addon">
-	    <span class="glyphicon glyphicon-calendar"></span>
-	</span>
+	            <span class="glyphicon glyphicon-calendar"></span>
+	        </span>
         </div>
         <script type="text/javascript">
-            if (typeof datepicker == 'undefined') {
-                document.write(
-                        '<link href="{{ asset('/bundles/zk2sps/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" />' +
-                        '<script src="{{ asset('/bundles/zk2sps/js/bootstrap-datepicker.js') }}"><\/script>' +
-                        '<script src="{{ asset('/bundles/zk2sps/js/bootstrap-datepicker.ru.js') }}"><\/script>'
-                );
+            if (window.filterDateParameters === undefined) {
+                filterDateParameters = {};
             }
-            $(function () {
-                $("#{{ id }}_d").datepicker({
-                    {% for key,value in SPSDateSetting %}
-                {{ key }}: {{ value|raw }},
-                {% endfor %}
-            });
-            })
-            ;
+            filterDateParameters['{{ id }}_d'] = { {{ (json|join(','))|raw }} };
         </script>
     {% endspaceless %}
 {% endblock %}
 
-{% block zk2_sps_text_filter_type_widget %}
+{% block zk2_sps_date_range_bootstrap_type_widget %}
+    {% set json = [] %}
+    {% for key,val in SPSDateSetting %}
+        {% set json = json|merge([key ~ ':' ~ val]) %}
+    {% endfor %}
     {% spaceless %}
-        <div class="sps-field-filter">
-            {% for child in form %}
-                <div class="input-group-sm sps-child-filter">
-                    {{ form_widget(child) }}
-                </div>
-            {% endfor %}
+        <div style="display: inline-block;">
+            <div class="input-daterange input-group-sm date zk2-sps-filter-date" id="{{ id }}_d">
+                {{ form_widget(form.start) }}
+                <span class="input-group-addon">{% trans with {} from "sps" %}operator.between.to{% endtrans %}</span>
+                {{ form_widget(form.end) }}
+            </div>
         </div>
+        <script type="text/javascript">
+            if (window.filterDateParameters === undefined) {
+                filterDateParameters = {};
+            }
+            filterDateParameters['{{ id }}_d'] = { {{ (json|join(','))|raw }} };
+        </script>
     {% endspaceless %}
 {% endblock %}
 
-{% block zk2_sps_string_filter_type_widget %}
-    {{ block('zk2_sps_text_filter_type_widget') }}
-{% endblock %}
-
-{% block zk2_sps_numeric_filter_type_widget %}
-    {% spaceless %}
-        {% set er_mess = null %}
-        <div class="sps-field-filter">
-            {% for child in form %}
-                {% set er_class = child.vars.errors|length ? ' sps-child-filter-error' : '' %}
-                <div class="input-group-sm sps-child-filter{{ er_class }} }}">
-                    {{ form_widget(child) }}
-                    {% if child.vars.errors|length %}{% set er_mess = child.vars.errors[0].message %}{% endif %}
-                </div>
-            {% endfor %}
-            {% if er_mess %}
-                <div class="sps-child-filter-error-mess">{{ er_mess }}</div>
-            {% endif %}
-        </div>
-    {% endspaceless %}
-{% endblock %}
-
-{% block zk2_sps_choice_filter_type_widget %}
-    {% spaceless %}
-        <div class="sps-field-filter">
-            {% for child in form %}
-                <div class="input-group-sm sps-child-filter">
-                    {{ form_widget(child) }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endspaceless %}
-{% endblock %}
-
-{% block zk2_sps_boolean_filter_type_widget %}
-    {% spaceless %}
-        <div class="sps-field-filter">
-            {% for child in form %}
-                <div class="input-group-sm sps-child-filter">
-                    {{ form_widget(child) }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endspaceless %}
-{% endblock %}
-
-{% block zk2_sps_date_filter_type_widget %}
+{% block zk2_sps_form_and_errors_widget_simple %}
     {% spaceless %}
         {% set er_mess = null %}
         <div class="sps-field-filter">
@@ -100,4 +57,40 @@
             {% endif %}
         </div>
     {% endspaceless %}
+{% endblock %}
+
+{% block zk2_sps_form_widget_simple %}
+    {% spaceless %}
+        <div class="sps-field-filter">
+            {% for child in form %}
+                <div class="input-group-sm sps-child-filter">
+                    {{ form_widget(child) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block zk2_sps_date_filter_type_widget %}
+    {{- block('zk2_sps_form_and_errors_widget_simple') -}}
+{% endblock %}
+
+{% block zk2_sps_date_range_filter_type_widget %}
+    {{- block('zk2_sps_form_and_errors_widget_simple') -}}
+{% endblock %}
+
+{% block zk2_sps_numeric_filter_type_widget %}
+    {{- block('zk2_sps_form_and_errors_widget_simple') -}}
+{% endblock %}
+
+{% block zk2_sps_choice_filter_type_widget %}
+    {{- block('zk2_sps_form_widget_simple') -}}
+{% endblock %}
+
+{% block zk2_sps_boolean_filter_type_widget %}
+    {{- block('zk2_sps_form_widget_simple') -}}
+{% endblock %}
+
+{% block zk2_sps_string_filter_type_widget %}
+    {{- block('zk2_sps_form_widget_simple') -}}
 {% endblock %}

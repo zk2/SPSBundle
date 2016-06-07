@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zk2\SPSBundle\Utils\ConditionOperator;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class BaseFilterType
@@ -14,51 +16,35 @@ use Zk2\SPSBundle\Utils\ConditionOperator;
 abstract class BaseFilterType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['level']) {
-            $builder->add(
-                'condition_pattern',
-                'choice',
-                array(
-                    'choices' => array(
-                        'OR' => 'OR',
-                        'AND' => 'AND',
-                    ),
-                    'attr' => array(
-                        'class' => 'zk2-sps-filter-condition-pattern',
-                    ),
-                )
-            );
+            $builder->add('condition_pattern', ChoiceType::class, array(
+                'choices' => array('condition_pattern.OR' => 'OR', 'condition_pattern.AND' => 'AND',),
+                'choice_translation_domain' => 'sps',
+                'attr' => array('class' => 'zk2-sps-filter-condition-pattern',),
+                'label' => false,
+            ));
         }
 
-        if (!$options['only_one_main_field']) {
-            $builder->add(
-                'condition_operator',
-                'choice',
-                array(
-                    'choices' => ConditionOperator::get($options['condition_operators']),
-                    'attr' => array(
-                        'class' => 'zk2-sps-filter-condition-operator',
-                    ),
-                )
-            );
+        if (!$options['single_field']) {
+            $builder->add('condition_operator', ChoiceType::class, array(
+                'choices' => ConditionOperator::get($options['condition_operators']),
+                'choice_translation_domain' => 'sps',
+                'attr' => array('class' => 'zk2-sps-filter-condition-operator',),
+                'label' => false,
+            ));
         } else {
-            $builder->add(
-                'condition_operator',
-                'hidden',
-                array(
-                    'data' => ConditionOperator::getValue($options['condition_operator_hidden']),
-                )
-            );
+            $builder->add('condition_operator', HiddenType::class, array(
+                'data' => ConditionOperator::getMask($options['condition_operator_hidden']),
+            ));
         }
     }
 
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -67,10 +53,10 @@ abstract class BaseFilterType extends AbstractType
                 'csrf_protection' => false,
                 'quantity' => 1,
                 'condition_operators' => ConditionOperator::full(),
-                'condition_operator_hidden' => 'eq',
+                'condition_operator_hidden' => ConditionOperator::EQ,
                 'level' => 0,
                 'not_used' => false,
-                'only_one_main_field' => false,
+                'single_field' => false,
                 'sps_field_name' => null,
                 'sps_field_alias' => null,
                 'sps_field_type' => null,
@@ -79,7 +65,7 @@ abstract class BaseFilterType extends AbstractType
     }
 
     /**
-     * @return string
+     * < 2.8
      */
     public function getName(){}
 }
