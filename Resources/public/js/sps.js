@@ -11,11 +11,11 @@ $(function () {
         return $(this).find('.sps-field-filter').length > 1
     }).find('.sps-field-filter:first').find('.sps-child-filter:last').append($img_add);
 
-    $('.zk2-sps-filter-date').each(function () {
-        if (filterDateParameters[$(this).attr('id')] != 'undefined') {
-            $('#' + $(this).attr('id')).datepicker(filterDateParameters[$(this).attr('id')]);
-        }
-    });
+    if (window.filterDateParameters !== undefined) {
+        $.each(filterDateParameters, function(key, val){
+            $('#' + key).datepicker(val);
+        });
+    }
 
     $('.img_add').click(function (e) {
         e.preventDefault();

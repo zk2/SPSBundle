@@ -98,7 +98,7 @@
     background: white;
 }
 
-    /*--------------------*/
+/*--------------------*/
 #sps_table {
     background: white;
     font-size: 90%;
@@ -165,6 +165,10 @@
     display: inline-block;
     width: 7px;
     height: 4px;
+}
+
+#sps_table td {
+    vertical-align: middle;
 }
 
 /*--------------------*/
