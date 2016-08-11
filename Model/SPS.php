@@ -428,15 +428,17 @@ abstract class SPS
      */
     public function buildResult()
     {
-        $this->checkFilters();
-
-        $form = $this->filterForm->createView();
         $groupField = array();
-        foreach ($form->children as $key => $child) {
-            $output = array();
-            preg_match("/(.*)__(\d+)$/", $child->vars['name'], $output);
-            if (isset($output[2])) {
-                $groupField[$output[1]][] = $child;
+        $form = null;
+        if ($this->filters) {
+            $this->checkFilters();
+            $form = $this->filterForm->createView();
+            foreach ($form->children as $key => $child) {
+                $output = array();
+                preg_match("/(.*)__(\d+)$/", $child->vars['name'], $output);
+                if (isset($output[2])) {
+                    $groupField[$output[1]][] = $child;
+                }
             }
         }
 
