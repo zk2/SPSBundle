@@ -22,7 +22,7 @@ class BooleanFilterType extends BaseFilterType
 
         $builder->add('name', ChoiceType::class, array(
             'required' => false,
-            'choices' => array('' => '', '1' => 'yes', '0' => 'no'),
+            'choices' => array('' => '', 'yes' => '1', 'no' => '0'),
             'translation_domain' => 'sps',
             'attr' => array(
                 'class' => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
