@@ -6,25 +6,26 @@ paginator.nextPageText: 'La page suivant'
 paginator.lastPageText: 'La dernière page'
 filter.filter: 'Le filtre'
 filter.reset: 'La faille'
-'yes': Oui
-'no': Non
-condition_pattern.OR: ou
-condition_pattern.AND: même
-operator.eq: equals
+yes: 'Oui'
+no: 'Non'
+boolean_operator.OR: 'ou'
+boolean_operator.AND: 'même'
+operator.eq: 'equals'
 operator.not_eq: 'not equals'
-operator._like_: contains
-operator.not__like_: 'not contains'
-operator.like_: 'begins with'
-operator._like: 'ends with'
-operator.not_like_: 'not begins with'
-operator.not__like: 'not ends with'
+operator.contains: 'contains'
+operator.not_contains: 'not contains'
+operator.begins_with: 'begins with'
+operator.ends_with: 'ends with'
+operator.not_begins_with: 'not begins with'
+operator.not_ends_with: 'not ends with'
 operator.less: 'less than'
 operator.less_eq: 'less than or equal'
-operator.more: 'greater than'
-operator.more_eq: 'greater than or equal'
+operator.greater: 'greater than'
+operator.greater_eq: 'greater than or equal'
 operator.is_empty: 'is empty'
 operator.is_not_empty: 'is not empty'
-operator.bool_: equals
-operator.between: between
-operator.between.from: from
-operator.between.to: to
+operator.bool_: 'equals'
+operator.between: 'between'
+operator.not_between: 'not between'
+operator.between.from: 'from'
+operator.between.to: 'to'

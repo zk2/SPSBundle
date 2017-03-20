@@ -1,0 +1,55 @@
+{% if filter|length %}
+
+    {% set td_colspan = colspan is defined ? colspan : 2 %}
+    {% set form = filter.form %}
+    {% set fields = filter.fields %}
+
+    {% form_theme form 'Zk2SpsBundle:Form:sps_filter_fields.html.twig' %}
+
+    <div class="sps-area">
+        <div id="sps_filter">
+            <nav class="navbar" role="navigation">
+                <a class="navbar-brand" data-toggle="collapse" href="#collapse_sps">
+                    <span class="glyphicon glyphicon-search"></span>
+                    {% trans with {} from "sps" %}filter.filter{% endtrans %}
+                </a>
+            </nav>
+            <div id="collapse_sps" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    {{ form_start(form, {'attr': {'class':"form-inline"}}) }}
+                    <table class="table table-condensed">
+                        <tr>
+                            {% set ind = 0 %}
+                            {% for childs in fields %}
+                                {% set ind = ind + 1 %}
+                                <td>
+                                    {% for child in childs %}
+                                        {% set field = attribute(form.children, child) %}
+                                        {{ form_label(field) }}
+                                        {{ form_widget(field) }}
+                                    {% endfor %}
+                                </td>
+                                {% if ind % td_colspan == 0 %}</tr><tr>{% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="navbar" colspan="{{ td_colspan }}">
+                                <a class="btn btn-xs btn-danger"
+                                   href="{{ path(app.request.get('_route'),app.request.get('_route_params')|merge({ '_sps_reset': '1' })) }}"
+                                   style="margin-right: 20px;">
+                                    {% trans with {} from "sps" %}filter.reset{% endtrans %}
+                                </a>
+                                <button type="submit" class="btn btn-small btn-success">
+                                    {% trans with {} from "sps" %}filter.filter{% endtrans %}
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </th>
+                        </tr>
+                    </table>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}

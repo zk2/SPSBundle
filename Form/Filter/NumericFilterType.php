@@ -1,16 +1,15 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Filter;
+namespace Zk2\SpsBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Type;
-use Zk2\SPSBundle\Utils\ConditionOperator;
+use Zk2\SpsBundle\Utils\ComparisonOperator;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class NumericFilterType
- * @package Zk2\SPSBundle\Form\Filter
  */
 class NumericFilterType extends BaseFilterType
 {
@@ -21,20 +20,26 @@ class NumericFilterType extends BaseFilterType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('name', TextType::class, array(
-            'required' => false,
-            'constraints' => array(
-                new Type(array(
-                    'type' => "numeric",
-                    'message' => "The value {{ value }} is not a valid {{ type }}.",
-                )),
-            ),
-            'attr' => array(
-                'class' => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
-                'data-index' => $options['level'],
-            ),
-            'label' => false,
-        ));
+        $builder->add(
+            'name',
+            TextType::class,
+            [
+                'required' => false,
+                'constraints' => [
+                    new Type(
+                        [
+                            'type' => "numeric",
+                            'message' => "The value {{ value }} is not a valid {{ type }}.",
+                        ]
+                    ),
+                ],
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
+                    'data-index' => $options['level'],
+                ],
+                'label' => false,
+            ]
+        );
     }
 
     /**
@@ -44,9 +49,11 @@ class NumericFilterType extends BaseFilterType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'condition_operators' => ConditionOperator::fullInt(),
-        ));
+        $resolver->setDefaults(
+            [
+                'comparison_operators' => ComparisonOperator::fullInt(),
+            ]
+        );
     }
 
     /**
@@ -55,13 +62,5 @@ class NumericFilterType extends BaseFilterType
     public function getBlockPrefix()
     {
         return 'zk2_sps_numeric_filter_type';
-    }
-
-    /**
-     * < 2.8
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 }

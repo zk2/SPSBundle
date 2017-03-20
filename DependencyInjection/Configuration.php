@@ -1,6 +1,6 @@
 <?php
 
-namespace Zk2\SPSBundle\DependencyInjection;
+namespace Zk2\SpsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -19,26 +19,58 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('zk2_sps');
+        $sessionKeys = ['by_route', 'by_query', null];
 
         $rootNode
             ->children()
-                ->arrayNode('options')
+                ->arrayNode('templates')
                     ->cannotBeEmpty()
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('pagination_template')
-                            ->defaultValue('Zk2SPSBundle:Form:pagination.html.twig')
+                            ->info('Pagination template')
+                            ->defaultValue('Zk2SpsBundle:Template:pagination.html.twig')
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('sortable_template')
-                            ->defaultValue('Zk2SPSBundle:Form:sortable.html.twig')
+                            ->info('Sortable template')
+                            ->defaultValue('Zk2SpsBundle:Template:sortable.html.twig')
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode('timezone_db')
-                            ->defaultValue(date_default_timezone_get())
+                        ->scalarNode('filter_template')
+                            ->info('Filter form template')
+                            ->defaultValue('Zk2SpsBundle:Template:filter.html.twig')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('table_template')
+                            ->info('General table template')
+                            ->defaultValue('Zk2SpsBundle:Template:table.html.twig')
                             ->cannotBeEmpty()
                         ->end()
                     ->end()
+                ->end()
+                ->scalarNode('full_path_to_web_root')
+                    ->info('Full path to web-root directory')
+                    ->defaultValue('%kernel.root_dir%/../web')
+                ->end()
+                ->scalarNode('td_builder_service_class')
+                    ->info('Service implement TdBuilderInterface and return HTML <td>{content}</td>')
+                    ->defaultValue('Zk2\SpsBundle\Model\TdBuilderService')
+                    ->validate()
+                        ->ifTrue(function($v) {
+                            if (null === $v) return false;
+                            return !class_exists($v) or !is_subclass_of($v, 'Zk2\SpsBundle\Model\TdBuilderInterface');
+                        })->thenInvalid('%s must be instanceof TdBuilderInterface')
+                    ->end()
+                ->end()
+                ->scalarNode('session_key')
+                    ->info('Key for the session: "by_route", "by_query" or null')
+                    ->defaultValue('by_route')
+                    ->validate()
+                        ->ifNotInArray($sessionKeys)
+                        ->thenInvalid('Invalid session_key %s. Use "by_route", "by_query" or null')
+                    ->end()
+                ->end()
             ->end()
         ;
 

@@ -1,15 +1,14 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Filter;
+namespace Zk2\SpsBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zk2\SPSBundle\Utils\ConditionOperator;
+use Zk2\SpsBundle\Utils\ComparisonOperator;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class ChoiceFilterType
- * @package Zk2\SPSBundle\Form\Filter
  */
 class ChoiceFilterType extends BaseFilterType
 {
@@ -20,15 +19,19 @@ class ChoiceFilterType extends BaseFilterType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('name', ChoiceType::class, array(
-            'required' => false,
-            'choices' => $options['choices'],
-            'attr' => array(
-                'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
-                'data-index' => $options['level'],
-            ),
-            'label' => false,
-        ));
+        $builder->add(
+            'name',
+            ChoiceType::class,
+            [
+                'required' => false,
+                'choices' => $options['choices'],
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
+                    'data-index' => $options['level'],
+                ],
+                'label' => false,
+            ]
+        );
     }
 
     /**
@@ -38,10 +41,12 @@ class ChoiceFilterType extends BaseFilterType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'condition_operators' => ConditionOperator::eqNotEq(),
-            'choices' => array(),
-        ));
+        $resolver->setDefaults(
+            [
+                'comparison_operators' => ComparisonOperator::eqNotEq(),
+                'choices' => [],
+            ]
+        );
     }
 
     /**
@@ -50,13 +55,5 @@ class ChoiceFilterType extends BaseFilterType
     public function getBlockPrefix()
     {
         return 'zk2_sps_choice_filter_type';
-    }
-
-    /**
-     * < 2.8
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 }

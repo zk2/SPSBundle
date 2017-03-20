@@ -1,0 +1,31 @@
+{# Sortable template #}
+
+{% if column.getAttr('sort') %}
+
+    <th{% if column.sortType %} class="sorted"{% endif %}  {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>
+        <span>{{ column.label }}</span>
+        <span class="sps-sort-container">
+            <div class="sps-item">
+                <div class="sps-sort">
+                    {% set icon_color = column.sortType == 'asc' ? 'yellow' : 'white' %}
+                    <a href="{{ path(usedRoute, usedRouteParams|merge({'sort': column.name, 'direction': 'asc'})) }}"
+                       class="{{ column.sortType }}" title="A-Z">
+                        <img src="{{ asset('bundles/zk2sps/images/' ~ icon_color ~ '-asc.png') }}">
+                    </a>
+                </div>
+                <div class="sps-sort">
+                    {% set icon_color = column.sortType == 'desc' ? 'yellow' : 'white' %}
+                    <a href="{{ path(usedRoute, usedRouteParams|merge({'sort': column.name, 'direction': 'desc'})) }}"
+                       class="{{ column.sortType }}" title="Z-A">
+                        <img src="{{ asset('bundles/zk2sps/images/' ~ icon_color ~ '-desc.png') }}">
+                    </a>
+                </div>
+            </div>
+        </span>
+    </th>
+
+{% else %}
+
+    <th class="sps-paginator-not-sorted" {% if column.getAttr('style') %} style="{{ column.getAttr('style') }}"{% endif %}>{{ column.label }}</th>
+
+{% endif %}

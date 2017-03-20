@@ -1,0 +1,64 @@
+{# Paginator template #}
+
+<tr>
+    <th class="text-center" colspan="{{ paginator.columns | length }}">
+
+        {% set prev_label = '<' %}
+        {% set next_label = '>' %}
+        {% set first_label = '<<' %}
+        {% set last_label = '>>' %}
+
+
+        <ul class="pagination pagination-sm">
+            <li>
+                    <span>
+                        {% set totalCount = paginator.count %}
+                        {% set pageCount = paginator.countPages %}
+                        {% set cou = ((totalCount % 10 == 1) and (totalCount % 100 != 11)) ? 0
+                        : (((totalCount % 10 >= 2) and (totalCount % 10 <= 4) and
+                        ((totalCount % 100 < 10) or (totalCount % 100 >= 20))) ? 1 : 2) %}
+                        {{ totalCount ~ ' ' }}
+                        {% transchoice totalCount with {'%cou%':cou} from "sps" %}paginator.results{% endtranschoice %}
+                        {% if totalCount > 0 %}
+                            {% set cou2 = ((pageCount % 10 == 1) and (pageCount % 100 != 11)) ? 0 :
+                            (((pageCount % 10 >= 2) and (pageCount % 10 <= 4) and
+                            ((pageCount % 100 < 10) or (pageCount % 100 >= 20))) ? 1 : 2) %}
+                            {{ pageCount ~ ' ' }}
+                            {% transchoice pageCount with {'%cou2%':cou2} from "sps" %}paginator.items{% endtranschoice %}
+                        {% endif %}
+                    </span>
+            </li>
+
+            {% if totalCount != '0' %}
+
+                {% set paginationData = paginator.paginationData %}
+
+                {% if paginationData.current != paginationData.first %}
+                    <li><a href="{{ path(paginator.usedRoute, paginator.usedRouteParams|merge({'page': paginationData.first})) }}">{{ first_label|raw }}</a></li>
+                {% endif %}
+
+                {% if paginationData.previous %}
+                    <li><a href="{{ path(paginator.usedRoute, paginator.usedRouteParams|merge({'page': paginationData.previous})) }}">{{ prev_label|raw }}</a></li>
+                {% endif %}
+
+                {% for page in paginationData.pagesInRange %}
+                    {% if page != paginationData.current %}
+                        <li><a href="{{ path(paginator.usedRoute, paginator.usedRouteParams|merge({'page': page})) }}">{{ page }}</a></li>
+                    {% else %}
+                        <li class="zk2-page-active active"><span>{{ page }}</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if paginationData.next %}
+                    <li><a href="{{ path(paginator.usedRoute, paginator.usedRouteParams|merge({'page': paginationData.next})) }}">{{ next_label|raw }}</a></li>
+                {% endif %}
+
+                {% if paginationData.last and paginationData.current != paginationData.last %}
+                    <li><a href="{{ path(paginator.usedRoute, paginator.usedRouteParams|merge({'page': paginationData.last})) }}">{{ last_label|raw }}</a></li>
+                {% endif %}
+
+            {% endif %}
+
+        </ul>
+    </th>
+</tr>

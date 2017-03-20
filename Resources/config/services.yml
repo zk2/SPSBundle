@@ -1,80 +1,66 @@
 services:
 
-    zk2.sps.query_builder.doctrine:
-        class: Zk2\SPSBundle\Query\DoctrineQueryBuilder
-
-    zk2.sps.query_builder.native:
-        class: Zk2\SPSBundle\Query\NativeQueryBuilder
-
-    zk2.sps.abstract:
-        class: Zk2\SPSBundle\Model\SPS
-        abstract: true
+    zk2.sps:
+        class: Zk2\SpsBundle\Model\SpsService
         arguments:
             - '@request_stack'
-            - '@doctrine'
-            - '@knp_paginator'
             - '@form.factory'
             - '@router'
-            - '@zk2.sps.form_filter.session'
-            - '%zk2_sps.options%'
+            - '@zk2.sps.form_filter.serializer'
+            - '%zk2_sps.session_key%'
 
-    zk2.sps.doctrine:
-        class: Zk2\SPSBundle\Model\DoctrineSPS
-        parent: zk2.sps.abstract
-        calls:
-            - [setQueryBuilder, ['@zk2.sps.query_builder.doctrine']]
+    zk2.sps.twig_extension:
+        class: Zk2\SpsBundle\Twig\Extension\SpsExtension
+        public: false
+        arguments: [null, '%zk2_sps.templates%']
+        tags:
+            -  { name: twig.extension }
 
-    zk2.sps.native:
-        class: Zk2\SPSBundle\Model\NativeSPS
-        parent: zk2.sps.abstract
-        calls:
-            - [setQueryBuilder, ['@zk2.sps.query_builder.native']]
-
-    zk2.sps.form_filter.session:
-        class: Zk2\SPSBundle\Utils\FormFilterSession
+    zk2.sps.form_filter.serializer:
+        class: Zk2\SpsBundle\Utils\FormFilterSerializer
         arguments: ['@doctrine', '@session']
 
 
     # form type
 
     zk2.sps.date_bootstrap.type:
-        class:  Zk2\SPSBundle\Form\Type\DateBootstrapType
+        class:  Zk2\SpsBundle\Form\Type\DateBootstrapType
         arguments: ['%locale%']
         tags:
             - { name: form.type, alias: zk2_sps_date_bootstrap_type }
 
     zk2.sps.date_range_bootstrap.type:
-        class:  Zk2\SPSBundle\Form\Type\DateRangeBootstrapType
+        class:  Zk2\SpsBundle\Form\Type\DateRangeBootstrapType
         arguments: ['%locale%', true]
         tags:
             - { name: form.type, alias: zk2_sps_date_range_bootstrap_type }
 
     zk2.sps.date.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\DateFilterType
+        class:  Zk2\SpsBundle\Form\Filter\DateFilterType
         tags:
             - { name: form.type, alias: zk2_sps_date_filter_type }
 
     zk2.sps.date_range.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\DateRangeFilterType
+        class:  Zk2\SpsBundle\Form\Filter\DateRangeFilterType
         tags:
             - { name: form.type, alias: zk2_sps_date_range_filter_type }
 
     zk2.sps.string.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\StringFilterType
+        class:  Zk2\SpsBundle\Form\Filter\StringFilterType
         tags:
             - { name: form.type, alias: zk2_sps_string_filter_type }
 
     zk2.sps.numeric.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\NumericFilterType
+        class:  Zk2\SpsBundle\Form\Filter\NumericFilterType
         tags:
             - { name: form.type, alias: zk2_sps_numeric_filter_type }
 
     zk2.sps.choice.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\ChoiceFilterType
+        class:  Zk2\SpsBundle\Form\Filter\ChoiceFilterType
         tags:
             - { name: form.type, alias: zk2_sps_choice_filter_type }
 
     zk2.sps.boolean.filter.type:
-        class:  Zk2\SPSBundle\Form\Filter\BooleanFilterType
+        class:  Zk2\SpsBundle\Form\Filter\BooleanFilterType
         tags:
             - { name: form.type, alias: zk2_sps_boolean_filter_type }

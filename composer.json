@@ -1,11 +1,18 @@
 {
   "name": "zk2/sps-bundle",
   "description": "Bundle implements the concept of \"Search - Pagination - Sort\" for tabular data",
-  "version" : "3.0.4",
-  "type" : "symfony-bundle",
+  "type": "symfony-bundle",
   "homepage": "https://github.com/zk2/SPSBundle",
   "license": "MIT",
-  "keywords" : ["sps", "admin panel", "content manager", "search", "pagination", "sort"],
+  "keywords": [
+    "sps",
+    "admin panel",
+    "content manager",
+    "search",
+    "pagination",
+    "sort",
+    "report"
+  ],
   "authors": [
     {
       "name": "Evgeniy Budanov",
@@ -14,15 +21,30 @@
   ],
   "require": {
     "php": ">=5.5.9",
-    "symfony/symfony": ">=2.8",
-    "knplabs/knp-paginator-bundle": ">=2.5"
+    "symfony/symfony": ">=2.8, ~3.3",
+    "doctrine/orm": "^2.5",
+    "zk2/sps-component": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.7.*",
+    "symfony/var-dumper": "3.3.*"
   },
   "autoload": {
-    "psr-4" : { "Zk2\\SPSBundle\\" : "" }
+    "psr-4": {
+      "Zk2\\SpsBundle\\": ""
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
   },
-  "extra" : {
-    "branch-alias" : {
-      "dev-master" : "3.0.x-dev"
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "Tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "4.0.x-dev"
     }
   }
 }

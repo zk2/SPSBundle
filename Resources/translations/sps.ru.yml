@@ -1,30 +1,31 @@
-paginator.results: результат|результата|результатов
-paginator.items: страница|страницы|страниц
+paginator.results: 'результат|результата|результатов'
+paginator.items: 'страница|страницы|страниц'
 paginator.firstPageText: 'Первая страница'
 paginator.previousPageText: 'Предыдущая страница'
 paginator.nextPageText: 'Следующая страница'
 paginator.lastPageText: 'Последняя страница'
-filter.filter: Фильтр
-filter.reset: Сброс
-'yes': Да
-'no': Нет
-condition_pattern.OR: или
-condition_pattern.AND: и
-operator.eq: равно
+filter.filter: 'Фильтр'
+filter.reset: 'Сброс'
+yes: 'Да'
+no: 'Нет'
+boolean_operator.OR: 'или'
+boolean_operator.AND: 'и'
+operator.eq: 'равно'
 operator.not_eq: 'не равно'
-operator._like_: содержит
-operator.not__like_: 'не содержит'
-operator.like_: 'начинается с'
-operator._like: 'заканчивается на'
-operator.not_like_: 'не начинается с'
-operator.not__like: 'не заканчивается на'
-operator.less: меньше
+operator.contains: 'содержит'
+operator.not_contains: 'не содержит'
+operator.begins_with: 'начинается с'
+operator.ends_with: 'заканчивается на'
+operator.not_begins_with: 'не начинается с'
+operator.not_ends_with: 'не заканчивается на'
+operator.less: 'меньше'
 operator.less_eq: 'меньше или равно'
-operator.more: больше
-operator.more_eq: 'больше или равно'
-operator.is_empty: пусто
+operator.greater: 'больше'
+operator.greater_eq: 'больше или равно'
+operator.is_empty: 'пусто'
 operator.is_not_empty: 'не пусто'
-operator.bool_: равно
-operator.between: между
-operator.between.from: с
-operator.between.to: по
+operator.bool_: 'равно'
+operator.between: 'между'
+operator.not_between: 'не между'
+operator.between.from: 'с'
+operator.between.to: 'по'

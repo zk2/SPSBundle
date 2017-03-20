@@ -1,15 +1,14 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Filter;
+namespace Zk2\SpsBundle\Form\Filter;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zk2\SPSBundle\Utils\ConditionOperator;
+use Zk2\SpsBundle\Utils\ComparisonOperator;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class BooleanFilterType
- * @package Zk2\SPSBundle\Form\Filter
  */
 class BooleanFilterType extends BaseFilterType
 {
@@ -20,16 +19,20 @@ class BooleanFilterType extends BaseFilterType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('name', ChoiceType::class, array(
-            'required' => false,
-            'choices' => array('' => '', 'yes' => '1', 'no' => '0'),
-            'translation_domain' => 'sps',
-            'attr' => array(
-                'class' => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
-                'data-index' => $options['level'],
-            ),
-            'label' => false,
-        ));
+        $builder->add(
+            'name',
+            ChoiceType::class,
+            [
+                'required' => false,
+                'choices' => ['' => '', 'yes' => '1', 'no' => '0'],
+                'translation_domain' => 'sps',
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
+                    'data-index' => $options['level'],
+                ],
+                'label' => false,
+            ]
+        );
     }
 
     /**
@@ -39,10 +42,12 @@ class BooleanFilterType extends BaseFilterType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
-            'condition_operators' => ConditionOperator::eqNotEq(),
-            'choices' => array(),
-        ));
+        $resolver->setDefaults(
+            [
+                'comparison_operators' => ComparisonOperator::eqNotEq(),
+                'choices' => [],
+            ]
+        );
     }
 
     /**
@@ -51,13 +56,5 @@ class BooleanFilterType extends BaseFilterType
     public function getBlockPrefix()
     {
         return 'zk2_sps_boolean_filter_type';
-    }
-
-    /**
-     * < 2.8
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 }

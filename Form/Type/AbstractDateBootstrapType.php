@@ -1,6 +1,6 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SpsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
@@ -25,7 +25,7 @@ abstract class AbstractDateBootstrapType extends AbstractType
     /**
      * @param string $locale
      */
-    public function __construct($locale)
+    public function __construct($locale = 'en')
     {
         $this->locale = $locale;
     }
@@ -35,7 +35,7 @@ abstract class AbstractDateBootstrapType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $defaults = array(
+        $defaults = [
             "autoclose" => "true",
             "calendarWeeks" => "false",
             "clearBtn" => "true",
@@ -46,7 +46,7 @@ abstract class AbstractDateBootstrapType extends AbstractType
             "forceParse" => "true",
             "format" => "'yyyy-mm-dd'",
             "keyboardNavigation" => "true",
-            "language" => "'" . $this->locale . "'",
+            "language" => "'".$this->locale."'",
             "minViewMode" => "0",
             "multidate" => "false",
             "multidateSeparator" => "','",
@@ -54,20 +54,23 @@ abstract class AbstractDateBootstrapType extends AbstractType
             "rtl" => "false",
             "startDate" => "-Infinity",
             "startView" => "0",
-            "todayBtn" => "false",
-            "todayHighlight" => "false",
+            "todayBtn" => "true",
+            "todayHighlight" => "true",
             "weekStart" => "1",
             "disableTouchKeyboard" => "false",
             "enableOnReadonly" => "true",
             "immediateUpdates" => "false",
+        ];
+
+        $resolver->setDefaults(
+            [
+                'widget' => 'single_text',
+                'SpsDateSetting' => $defaults,
+            ]
         );
 
-        $resolver->setDefaults(array(
-            'widget' => 'single_text',
-            'SPSDateSetting' => $defaults,
-        ));
         $resolver->setNormalizer(
-            'SPSDateSetting',
+            'SpsDateSetting',
             function (Options $options, $configs) use ($defaults) {
                 return array_merge($defaults, $configs);
             }
@@ -83,15 +86,7 @@ abstract class AbstractDateBootstrapType extends AbstractType
 
         $view->vars = array_replace(
             $view->vars,
-            array('SPSDateSetting' => $options['SPSDateSetting'],)
+            ['SpsDateSetting' => $options['SpsDateSetting'],]
         );
-    }
-
-    /**
-     * < 2.8
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 }

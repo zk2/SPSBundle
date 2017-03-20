@@ -1,6 +1,6 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SpsBundle\Form\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
@@ -27,13 +27,5 @@ class DateBootstrapType extends AbstractDateBootstrapType
     public function getBlockPrefix()
     {
         return 'zk2_sps_date_bootstrap_type';
-    }
-
-    /**
-     * < 2.8
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 }

@@ -11,6 +11,10 @@ $(function () {
         return $(this).find('.sps-field-filter').length > 1
     }).find('.sps-field-filter:first').find('.sps-child-filter:last').append($img_add);
 
+    $('#sps_filter input[type="date"]').each(function() {
+        $(this).attr('type', 'text');
+    });
+
     if (window.filterDateParameters !== undefined) {
         $.each(filterDateParameters, function(key, val){
             $('#' + key).datepicker(val);

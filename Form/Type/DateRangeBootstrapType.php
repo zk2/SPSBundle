@@ -1,11 +1,14 @@
 <?php
 
-namespace Zk2\SPSBundle\Form\Type;
+namespace Zk2\SpsBundle\Form\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Zk2\SPSBundle\Form\DataTransformer\DateRangeToArrayTransformer;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Zk2\SpsBundle\Form\DataTransformer\DateRangeToArrayTransformer;
 
 /**
  * class DateRangeBootstrapType
@@ -21,22 +24,33 @@ class DateRangeBootstrapType extends AbstractDateBootstrapType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $baseOptions = array(
+        $baseOptions = [
             'widget' => 'single_text',
             'required' => false,
             'label' => false,
-            'error_bubbling' => true,
-            'attr' => array('class' => 'zk2-sps-filter-field zk2-sps-filter-date-range')
-        );
+            'attr' => ['class' => 'zk2-sps-filter-field zk2-sps-filter-date-range'],
+        ];
 
         $builder
             ->add('start', DateType::class, $baseOptions)
-            ->add('end', DateType::class, $baseOptions)
-        ;
+            ->add('end', DateType::class, $baseOptions);
 
         $builder->addViewTransformer(new DateRangeToArrayTransformer(), true);
+
+        $builder->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($options) {
+                $data = $event->getData();
+                $form = $event->getForm();
+                if (!empty($data['start']) and empty($data['end'])) {
+                    $form->get('end')->addError(new FormError('Invalid date end'));
+                } elseif (empty($data['start']) and !empty($data['end'])) {
+                    $form->get('start')->addError(new FormError('Invalid date from'));
+                }
+            }
+        );
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -51,13 +65,5 @@ class DateRangeBootstrapType extends AbstractDateBootstrapType
     public function getBlockPrefix()
     {
         return 'zk2_sps_date_range_bootstrap_type';
-    }
-
-    /**
-     * < 2.8
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 }
