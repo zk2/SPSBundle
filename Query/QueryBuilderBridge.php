@@ -82,12 +82,19 @@ class QueryBuilderBridge
         }
     }
 
+    /**
+     * @return void
+     */
     public function buildQuery()
     {
         $container = Container::create($this->whereData, $this->queryBuilder->getPlatform());
         $this->queryBuilder->buildWhere($container);
     }
 
+    /**
+     * @param array $orderBy
+     * @return QueryBuilderInterface
+     */
     public function addOrderBy(array $orderBy)
     {
         $ob = [];
@@ -99,11 +106,19 @@ class QueryBuilderBridge
         return $this->queryBuilder;
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return $this->queryBuilder->totalResultCount();
     }
 
+    /**
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
     public function getResult($limit, $offset)
     {
         $results = $this->queryBuilder->getResult($limit, $offset);
