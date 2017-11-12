@@ -12,20 +12,20 @@ for use in your view layer.
 
 Demo
 ----
-[https://sps.sf2.pp.ua](https://sps.sf2.pp.ua)
+[/postgres/doctrine_country](https://sps.sf2.pp.ua)
 
 Documentation
 -------------
 
-[Quick start](https://github.com/zk2/SPSBundle/blob/dev/Resources/doc/index.rst)
+[Quick start](https://github.com/zk2/SPSBundle/blob/master/Resources/doc/index.rst)
 
-[Custom settings](https://github.com/zk2/SPSBundle/blob/dev/Resources/doc/settings.rst)
+[Custom settings](https://github.com/zk2/SPSBundle/blob/master/Resources/doc/settings.rst)
 
-[Usage](https://github.com/zk2/SPSBundle/blob/dev/Resources/doc/usage.rst)
+[Usage](https://github.com/zk2/SPSBundle/blob/master/Resources/doc/usage.rst)
 
-[Column options](https://github.com/zk2/SPSBundle/blob/dev/Resources/doc/column_options.rst)
+[Column options](https://github.com/zk2/SPSBundle/blob/master/Resources/doc/column_options.rst)
 
-[Filter options](https://github.com/zk2/SPSBundle/blob/dev/Resources/doc/filter_options.rst)
+[Filter options](https://github.com/zk2/SPSBundle/blob/master/Resources/doc/filter_options.rst)
 
 Running the Tests
 -----------------
