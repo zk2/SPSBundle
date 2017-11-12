@@ -12,7 +12,7 @@ for use in your view layer.
 
 Demo
 ----
-[https://sf.zeka.pp.ua](https://sf.zeka.pp.ua)
+[https://sps.sf2.pp.ua](https://sps.sf2.pp.ua)
 
 Documentation
 -------------
