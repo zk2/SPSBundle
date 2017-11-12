@@ -141,4 +141,4 @@ Your template ``default/country.html.twig``
 
 
 .. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
-.. _Demo: https://sf.zeka.pp.ua
+.. _Demo: https://sps.sf2.pp.ua/postgres/doctrine_country
