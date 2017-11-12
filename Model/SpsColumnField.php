@@ -82,7 +82,7 @@ class SpsColumnField
         if ($this->columnType != 'numeric') {
             $this->attr['autosum'] = null;
         }
-        if ($this->columnType == 'boolean' and isset($this->attr['boolean_view']) and !$this->attr['boolean_view']) {
+        if ($this->columnType == 'boolean' and !isset($this->attr['boolean_view'])) {
             $this->attr['boolean_view'] = 'icon';
         }
     }

@@ -18,8 +18,7 @@ Common options
     - **label** - default "humanize" of field name. Label of this filter field.
     - **comparison_operators** - array of comparison operators (see bellow)
     - **not_used** - default false. If true - the field does not participate in the construction of the SQL query (this field could be processed in controller)
-    - **single_field** - default false. Used to display only the main filter field, without the possibility of specifying comparison_operator (the default comparison_operator is "=").
-    - **comparison_operator_hidden** - default "=". Used with ``single_field`` option for override default comparison_operator.
+    - **comparison_operator_hidden** - default null. If defined, the "Select" element will be replaced by a input-hidden field.
 
 Options for date and dateRange filters
 --------------

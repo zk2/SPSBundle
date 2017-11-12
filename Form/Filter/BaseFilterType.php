@@ -33,7 +33,7 @@ abstract class BaseFilterType extends AbstractType
             );
         }
 
-        if (!$options['single_field']) {
+        if (!$options['comparison_operator_hidden']) {
             $builder->add(
                 'comparison_operator',
                 ChoiceType::class,
@@ -65,14 +65,14 @@ abstract class BaseFilterType extends AbstractType
                 'error_bubbling' => false,
                 'quantity' => 1,
                 'comparison_operators' => ComparisonOperator::full(),
-                'comparison_operator_hidden' => ConditionInterface::TOKEN_EQUALS,
+                'comparison_operator_hidden' => null,
                 'level' => 0,
                 'not_used' => false,
-                'single_field' => false,
                 'sps_filter_name' => null,
                 'sps_filter_type' => null,
                 'sps_filter_field' => null,
                 'sps_filter_function' => null,
+                'function' => [],
             ]
         );
     }

@@ -277,10 +277,6 @@ class SpsService
             $attr['choices'] = $this->reconfigureChoices($attr['choices']);
         }
 
-        if (!isset($attr['label']) and $column = $this->getColumnByFieldName($name)) {
-            $attr['label'] = $column->getLabel();
-        }
-
         $this->filters[] = new SpsFilterField($name, $type, $attr);
 
         return $this;
@@ -380,7 +376,6 @@ class SpsService
         if ($this->sessionKey and $spsSort = $this->session->get('_sps_sort_'.$this->sessionKey)) {
             $sortField = $spsSort['_sps_sort_field_name'];
             $sortType = $spsSort['_sps_sort_direction'];
-            $this->getColumnByFieldName($sortField)->setSortType($sortType);
             $sort = [$sortField => $sortType];
         } elseif ($this->defaultSort) {
             $sort = $this->defaultSort;
@@ -393,22 +388,6 @@ class SpsService
         $paginator->setUsedRouteParams($this->totalRouteParams);
 
         return $paginator;
-    }
-
-    /**
-     * @param string $name
-     * @return SpsColumnField
-     * @throws SpsException
-     */
-    private function getColumnByFieldName($name)
-    {
-        foreach ($this->columns as $column) {
-            if ($name == $column->getName()) {
-                return $column;
-            }
-        }
-
-        throw new SpsException(sprintf('Column by name "%s" not found', $name));
     }
 
     /**

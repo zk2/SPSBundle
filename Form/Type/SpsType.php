@@ -25,9 +25,6 @@ class SpsType extends AbstractType
                     $field->getFormClass(),
                     array_merge($field->getAttributes(), ['level' => $i, 'label' => $i ? false : $field->getLabel()])
                 );
-                if ($field->getAttr('single_field')) {
-                    break;
-                }
             }
         }
     }

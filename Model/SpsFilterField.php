@@ -37,14 +37,14 @@ class SpsFilterField
      * @var array
      */
     protected $defaultAttr = [
-        'single_field' => false,
-        'not_used' => false,
+        'not_used'     => false,
     ];
 
     /**
      * @param string $filterName
      * @param string $filterType
-     * @param array $attr
+     * @param array  $attr
+     *
      * @throws SpsException
      */
     public function __construct($filterName, $filterType, array $attr = [])
@@ -54,11 +54,15 @@ class SpsFilterField
                 sprintf("Filter's type \"%s\" is not valid. Use %s", $filterType, implode(' or ', $this->filterTypes))
             );
         }
+        if (isset($attr['function'])) {
+            $attr['sps_filter_function'] = $attr['function'];
+            unset($attr['function']);
+        }
         $this->filterName = $filterName;
         $this->filterType = $filterType;
         $this->attr = array_merge($this->defaultAttr, $attr);
         if ('boolean' == $this->filterType) {
-            $this->attr['single_field'] = true;
+            $this->attr['quantity'] = 1;
         }
     }
 
@@ -91,7 +95,7 @@ class SpsFilterField
      */
     public function getNameForFormClass()
     {
-        return str_replace('.', '_', $this->filterName);
+        return str_replace(['.', ','], '_', $this->filterName);
     }
 
     /**
@@ -99,10 +103,6 @@ class SpsFilterField
      */
     public function getQuantity()
     {
-        if ($this->attr['single_field']) {
-            return 1;
-        }
-
         return $this->getAttr('quantity', null, 1);
     }
 
@@ -113,9 +113,9 @@ class SpsFilterField
     {
         return array_merge(
             [
-                'sps_filter_name' => $this->getNameForFormClass(),
+                'sps_filter_name'  => $this->getNameForFormClass(),
                 'sps_filter_field' => $this->filterName,
-                'sps_filter_type' => $this->filterType,
+                'sps_filter_type'  => $this->filterType,
             ],
             $this->attr
         );
@@ -130,9 +130,10 @@ class SpsFilterField
     }
 
     /**
-     * @param $name
+     * @param string      $name
      * @param string|null $subname
      * @param string|null $default
+     *
      * @return string|null
      */
     public function getAttr($name, $subname = null, $default = null)
@@ -148,6 +149,7 @@ class SpsFilterField
 
     /**
      * @param string $text
+     *
      * @return string
      */
     public function humanize($text)

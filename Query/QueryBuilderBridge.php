@@ -87,7 +87,7 @@ class QueryBuilderBridge
      */
     public function buildQuery()
     {
-        $container = Container::create($this->whereData, $this->queryBuilder->getPlatform());
+        $container = Container::create($this->whereData);
         $this->queryBuilder->buildWhere($container);
     }
 
@@ -99,7 +99,9 @@ class QueryBuilderBridge
     {
         $ob = [];
         foreach ($orderBy as $field => $type) {
-            $ob[] = [$field, $type];
+            $column = $this->getColumnByFieldName($field);
+            $column->setSortType($type);
+            $ob[] = [$field, $type, $column->getAttr('sort_function')];
         }
         $this->queryBuilder->buildOrderBy($ob);
 
@@ -230,5 +232,21 @@ class QueryBuilderBridge
         }
 
         return $collection;
+    }
+
+    /**
+     * @param string $name
+     * @return SpsColumnField
+     * @throws SpsException
+     */
+    private function getColumnByFieldName($name)
+    {
+        foreach ($this->columns as $column) {
+            if ($name == $column->getName()) {
+                return $column;
+            }
+        }
+
+        throw new SpsException(sprintf('Column by name "%s" not found', $name));
     }
 }
