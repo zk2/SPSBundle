@@ -12,7 +12,7 @@ for use in your view layer.
 
 Demo
 ----
-[/postgres/doctrine_country](https://sps.sf2.pp.ua)
+[https://sps.sf2.pp.ua/postgres/doctrine_country](https://sps.sf2.pp.ua)
 
 Documentation
 -------------
