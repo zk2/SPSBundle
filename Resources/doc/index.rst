@@ -1,8 +1,8 @@
 Zk2SpsBundle
 ============
 
-The **Zk2SpsBundle** is implemented as a service that get Doctrine\DBAL\Query\QueryBuilder
-or Doctrine\ORM\QueryBuilder and returned form of filters and array with data
+The **Zk2SpsBundle** is implemented as a service that get ``Doctrine\DBAL\Query\QueryBuilder``
+or ``Doctrine\ORM\QueryBuilder`` and returned form of filters and array with data
 for use in your view layer.
 
 Installation
