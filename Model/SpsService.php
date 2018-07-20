@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Model;
 
@@ -16,6 +26,9 @@ use Zk2\SpsBundle\Query\QueryBuilderBridge;
 use Zk2\SpsBundle\Utils\FormFilterSerializer;
 use Zk2\SpsBundle\Utils\Paginator;
 
+/**
+ * Class SpsService
+ */
 class SpsService
 {
     const SESSION_KEY_NAME = '_sps_qk';
@@ -116,19 +129,14 @@ class SpsService
     protected $autosum;
 
     /**
-     * @param RequestStack $request
-     * @param FormFactory $formFactory
-     * @param Router $router
+     * @param RequestStack         $request
+     * @param FormFactory          $formFactory
+     * @param Router               $router
      * @param FormFilterSerializer $formFilterSerializer
-     * @param string|null $sessionKeyType
+     * @param string|null          $sessionKeyType
      */
-    public function __construct(
-        RequestStack $request,
-        FormFactory $formFactory,
-        Router $router,
-        FormFilterSerializer $formFilterSerializer,
-        $sessionKeyType
-    ) {
+    public function __construct(RequestStack $request, FormFactory $formFactory, Router $router, FormFilterSerializer $formFilterSerializer, $sessionKeyType)
+    {
         $this->request = $request->getCurrentRequest();
         $this->session = $this->request->getSession();
         $this->formFactory = $formFactory;
@@ -183,7 +191,7 @@ class SpsService
      */
     public function isForward()
     {
-        if ('by_query' == $this->sessionKeyType and !$this->sessionKey) {
+        if ('by_query' === $this->sessionKeyType && !$this->sessionKey) {
             $this->totalRouteParams = array_merge(
                 $this->totalRouteParams,
                 [self::SESSION_KEY_NAME => md5(microtime())]
@@ -193,14 +201,6 @@ class SpsService
         }
 
         return null;
-    }
-
-    /**
-     * @return string
-     */
-    private function getUrl()
-    {
-        return $this->router->generate($this->totalRoute, $this->totalRouteParams);
     }
 
     /**
@@ -219,6 +219,7 @@ class SpsService
      * @param ORMQueryBuilder|DBALQueryBuilder $queryBuilder
      *
      * @return SpsService
+     *
      * @throws SpsException
      */
     public function setQueryBuilder($queryBuilder)
@@ -245,19 +246,20 @@ class SpsService
      */
     public function setLimitRows($limitRows)
     {
-        $this->limitRows = (integer)$limitRows;
+        $this->limitRows = (int) $limitRows;
     }
 
     /**
      * @param string $name
      * @param string $type
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return SpsService
      */
     public function addColumn($name, $type = 'string', array $attr = [])
     {
         $column = new SpsColumnField($name, $type, $attr);
-        if ('by_query' == $this->sessionKeyType and $this->sessionKey) {
+        if ('by_query' === $this->sessionKeyType && $this->sessionKey) {
             $column->setSessionKey($this->sessionKey);
         }
         $this->columns[] = $column;
@@ -268,12 +270,13 @@ class SpsService
     /**
      * @param string $name
      * @param string $type
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return SpsService
      */
     public function addFilter($name, $type = 'string', array $attr = [])
     {
-        if (isset($attr['choices']) and $attr['choices']) {
+        if (isset($attr['choices']) && $attr['choices']) {
             $attr['choices'] = $this->reconfigureChoices($attr['choices']);
         }
 
@@ -283,14 +286,55 @@ class SpsService
     }
 
     /**
+     * Build Result
+     *
+     * @return array
+     */
+    public function buildResult()
+    {
+        $filter = $fields = [];
+        $form = null;
+        $this->checkFilters();
+        if ($this->filters) {
+            $form = $this->filterForm->createView();
+            foreach ($form->children as $child) {
+                $output = [];
+                preg_match("/(.*)__(\d+)$/", $child->vars['name'], $output);
+                if (isset($output[2])) {
+                    $fields[$output[1]][] = $child->vars['name'];
+                }
+            }
+            $filter = [
+                'fields' => $fields,
+                'form' => $form,
+            ];
+        }
+
+        return [
+            'filter' => $filter,
+            'paginator' => $this->getPaginator(),
+            'autosum' => [], //$this->spsQueryBuilder->getAutosum(),
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    private function getUrl()
+    {
+        return $this->router->generate($this->totalRoute, $this->totalRouteParams);
+    }
+
+    /**
      * reconfigureChoices
      *
      * @param array $choices
+     *
      * @return array $choices
      */
     private function reconfigureChoices($choices)
     {
-        if (isset($choices[0]) and is_array($choices[0])) {
+        if (isset($choices[0]) && is_array($choices[0])) {
             $array = [];
             foreach ($choices as $data) {
                 $array[array_pop($data)] = array_shift($data);
@@ -325,8 +369,8 @@ class SpsService
             );
             $this->filterForm->setData($this->defaultFilters);
 
-            if ('POST' != $this->request->getMethod()) {
-                if ($this->sessionKey and $this->session->has('_sps_filter_'.$this->sessionKey)) {
+            if ('POST' !== $this->request->getMethod()) {
+                if ($this->sessionKey && $this->session->has('_sps_filter_'.$this->sessionKey)) {
                     $data = $this->formFilterSerializer->unserialize('_sps_filter_'.$this->sessionKey, $this->emName);
                     $this->filterForm->setData($data);
                 }
@@ -339,7 +383,8 @@ class SpsService
                         $this->session->remove('_sps_pager_'.$this->sessionKey);
                         $this->formFilterSerializer->serialize(
                             $this->filterForm->getData(),
-                            '_sps_filter_'.$this->sessionKey
+                            '_sps_filter_'.$this->sessionKey,
+                            $this->emName
                         );
                     }
                 }
@@ -349,6 +394,9 @@ class SpsService
         $this->spsQueryBuilder->buildQuery();
     }
 
+    /**
+     * @return Paginator
+     */
     private function getPaginator()
     {
         $page = $this->request->query->getInt('page', 1);
@@ -373,7 +421,7 @@ class SpsService
             }
         }
 
-        if ($this->sessionKey and $spsSort = $this->session->get('_sps_sort_'.$this->sessionKey)) {
+        if ($this->sessionKey && $spsSort = $this->session->get('_sps_sort_'.$this->sessionKey)) {
             $sortField = $spsSort['_sps_sort_field_name'];
             $sortType = $spsSort['_sps_sort_direction'];
             $sort = [$sortField => $sortType];
@@ -388,37 +436,5 @@ class SpsService
         $paginator->setUsedRouteParams($this->totalRouteParams);
 
         return $paginator;
-    }
-
-    /**
-     * Build Result
-     *
-     * @return array
-     */
-    public function buildResult()
-    {
-        $filter = $fields = [];
-        $form = null;
-        $this->checkFilters();
-        if ($this->filters) {
-            $form = $this->filterForm->createView();
-            foreach ($form->children as $child) {
-                $output = [];
-                preg_match("/(.*)__(\d+)$/", $child->vars['name'], $output);
-                if (isset($output[2])) {
-                    $fields[$output[1]][] = $child->vars['name'];
-                }
-            }
-            $filter = [
-                'fields' => $fields,
-                'form' => $form,
-            ];
-        }
-//dump($filter, $this->getPaginator());exit;
-        return [
-            'filter' => $filter,
-            'paginator' => $this->getPaginator(),
-            'autosum' => [],//$this->spsQueryBuilder->getAutosum(),
-        ];
     }
 }

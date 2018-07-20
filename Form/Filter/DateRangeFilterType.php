@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\Filter;
 
@@ -10,7 +20,7 @@ use Zk2\SpsBundle\Form\Type\DateRangeBootstrapType;
 /**
  * Class DateRangeFilterType
  */
-class DateRangeFilterType extends BaseFilterType
+class DateRangeFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -24,12 +34,12 @@ class DateRangeFilterType extends BaseFilterType
             DateRangeBootstrapType::class,
             [
                 'required' => false,
-                'attr' => [
-                    'readonly' => 'readonly',
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-date-field',
+                'attr'     => [
+                    'readonly'   => 'readonly',
+                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-date-field',
                     'data-index' => $options['level'],
                 ],
-                'label' => false,
+                'label'    => false,
             ]
         );
     }
@@ -44,9 +54,9 @@ class DateRangeFilterType extends BaseFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::between(),
-                'choices' => [],
-                'model_timezone' => date_default_timezone_get(),
-                'view_timezone' => date_default_timezone_get(),
+                'choices'              => [],
+                'model_timezone'       => date_default_timezone_get(),
+                'view_timezone'        => date_default_timezone_get(),
             ]
         );
     }

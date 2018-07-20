@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\Filter;
 
@@ -11,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class NumericFilterType
  */
-class NumericFilterType extends BaseFilterType
+class NumericFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -24,20 +34,20 @@ class NumericFilterType extends BaseFilterType
             'name',
             TextType::class,
             [
-                'required' => false,
+                'required'    => false,
                 'constraints' => [
                     new Type(
                         [
-                            'type' => "numeric",
+                            'type'    => "numeric",
                             'message' => "The value {{ value }} is not a valid {{ type }}.",
                         ]
                     ),
                 ],
-                'attr' => [
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
+                'attr'        => [
+                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
                     'data-index' => $options['level'],
                 ],
-                'label' => false,
+                'label'       => false,
             ]
         );
     }

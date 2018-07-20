@@ -1,9 +1,22 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Model;
 
 use Zk2\SpsBundle\Exceptions\SpsException;
 
+/**
+ * Class SpsFilterField
+ */
 class SpsFilterField
 {
     /**
@@ -37,7 +50,7 @@ class SpsFilterField
      * @var array
      */
     protected $defaultAttr = [
-        'not_used'     => false,
+        'not_used' => false,
     ];
 
     /**
@@ -61,7 +74,7 @@ class SpsFilterField
         $this->filterName = $filterName;
         $this->filterType = $filterType;
         $this->attr = array_merge($this->defaultAttr, $attr);
-        if ('boolean' == $this->filterType) {
+        if ('boolean' === $this->filterType) {
             $this->attr['quantity'] = 1;
         }
     }

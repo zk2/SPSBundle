@@ -19,6 +19,7 @@ Common options
     - **comparison_operators** - array of comparison operators (see bellow)
     - **not_used** - default false. If true - the field does not participate in the construction of the SQL query (this field could be processed in controller)
     - **comparison_operator_hidden** - default null. If defined, the "Select" element will be replaced by a input-hidden field.
+    - **function** - default null. Array like this: ['aggregate' => true, 'definition' => 'count({property})']
 
 Options for date and dateRange filters
 --------------
@@ -27,25 +28,24 @@ Options for date and dateRange filters
     - **view_timezone** - default PHP ``date_default_timezone_get()``. This parameter pass to the Symfony DateTimeType.
 
 Available comparison operators
------------------------------
+------------------------------
 
-    - **eq** - equals
-    - **not_eq** - not equals
-    - **_like_** - contains
-    - **not__like_** - not contains
-    - **like_** - begins with
-    - **_like** - ends with
-    - **not_like_** - not begins with
-    - **not__like** - not ends with
-    - **less** - less than
-    - **less_eq** - less than or equal
-    - **more** - greater than
-    - **more_eq** - greater than or equal
-    - **is_empty** - is empty
-    - **is_not_empty** - is not empty
-    - **bool_** - equals
+    - **equals** - equals
+    - **notEquals** - not equals
+    - **contains** - contains
+    - **notContains** - not contains
+    - **beginsWith** - begins with
+    - **endsWith** - ends with
+    - **notBeginsWith** - not begins with
+    - **notEndsWith** - not ends with
+    - **lessThan** - less than
+    - **lessThanOrEqual** - less than or equal
+    - **greaterThan** - greater than
+    - **greaterThanOrEqual** - greater than or equal
+    - **isNull** - is null
+    - **isNotNull** - is not null
     - **between** - between
-    - **not_between** - not between
+    - **notBetween** - not between
 
 There are ready-made sets
 -------------------------

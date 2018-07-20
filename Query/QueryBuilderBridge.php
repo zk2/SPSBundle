@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Query;
 
@@ -16,7 +26,9 @@ use Zk2\SpsComponent\Condition\ContainerInterface;
 use Zk2\SpsComponent\QueryBuilderInterface;
 use Zk2\SpsComponent\QueryBuilderFactory;
 
-
+/**
+ * Class QueryBuilderBridge
+ */
 class QueryBuilderBridge
 {
     /**
@@ -37,7 +49,7 @@ class QueryBuilderBridge
     /**
      * QueryBuilderBridge constructor.
      *
-     * @param SpsColumnField[] $columns
+     * @param SpsColumnField[]                 $columns
      * @param ORMQueryBuilder|DBALQueryBuilder $queryBuilder
      */
     public function __construct(array $columns, $queryBuilder)
@@ -56,7 +68,9 @@ class QueryBuilderBridge
 
     /**
      * @param Form $form
+     *
      * @return void
+     *
      * @throws SpsException
      */
     public function buildQueryConditions(Form $form)
@@ -93,6 +107,7 @@ class QueryBuilderBridge
 
     /**
      * @param array $orderBy
+     *
      * @return QueryBuilderInterface
      */
     public function addOrderBy(array $orderBy)
@@ -117,15 +132,16 @@ class QueryBuilderBridge
     }
 
     /**
-     * @param $limit
-     * @param $offset
+     * @param int $limit
+     * @param int $offset
+     *
      * @return array
      */
     public function getResult($limit, $offset)
     {
         $results = $this->queryBuilder->getResult($limit, $offset);
 
-        if (count($results) and is_object(current($results))) {
+        if (count($results) && is_object(current($results))) {
             $from = $join = [];
             /** @var From $item */
             foreach ($this->queryBuilder->getSqlPart($this->queryBuilder->getQueryBuilder(), 'from') as $item) {
@@ -180,6 +196,7 @@ class QueryBuilderBridge
 
     /**
      * @param array|Form[] $children
+     *
      * @return array
      */
     private function applyFilter(array $children)
@@ -194,8 +211,7 @@ class QueryBuilderBridge
             $comparisonOperator = $child->get('comparison_operator')->getData();
             $value = $child->get('name')->getData();
 
-            if (
-                !in_array($comparisonOperator, [ConditionInterface::IS_NULL, ConditionInterface::IS_NOT_NULL])
+            if (!in_array($comparisonOperator, [ConditionInterface::IS_NULL, ConditionInterface::IS_NOT_NULL])
                 and !is_object($value)
                 and !strlen($value = trim($value))
             ) {
@@ -204,7 +220,7 @@ class QueryBuilderBridge
 
             $formFieldType = $child->getConfig()->getOption('sps_filter_type');
 
-            if ('dateRange' == $formFieldType) {
+            if ('dateRange' === $formFieldType) {
                 $start = $child->get('name')->get('start')->getData();
                 $end = $child->get('name')->get('end')->getData();
                 if ($end and !$start) {
@@ -214,7 +230,7 @@ class QueryBuilderBridge
                     $start instanceof \DateTime ? $start->format('Y-m-d') : null,
                     $end instanceof \DateTime ? $end->format('Y-m-d') : null,
                 ];
-            } elseif ('date' == $formFieldType) {
+            } elseif ('date' === $formFieldType) {
                 $start = $child->get('name')->getData();
                 $value = $start instanceof \DateTime ? $start->format('Y-m-d') : null;
             }
@@ -236,13 +252,15 @@ class QueryBuilderBridge
 
     /**
      * @param string $name
+     *
      * @return SpsColumnField
+     *
      * @throws SpsException
      */
     private function getColumnByFieldName($name)
     {
         foreach ($this->columns as $column) {
-            if ($name == $column->getName()) {
+            if ($name === $column->getName()) {
                 return $column;
             }
         }

@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Model;
 
@@ -19,6 +29,7 @@ class DateRange implements \Serializable
 
     /**
      * DateRange constructor.
+     *
      * @param \DateTime|null $start
      * @param \DateTime|null $end
      */
@@ -38,19 +49,20 @@ class DateRange implements \Serializable
     {
         return [
             'start' => $this->start,
-            'end' => $this->end,
+            'end'   => $this->end,
         ];
     }
 
     /**
      * @param array $dates
+     *
      * @return static
+     *
      * @throws \InvalidArgumentException
      */
     public static function fromArray(array $dates)
     {
         if (!$dates['start'] instanceof \DateTime and !$dates['end'] instanceof \DateTime) {
-            //throw new \InvalidArgumentException('From and to are required');
             return null;
         }
 

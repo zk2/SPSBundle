@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\DependencyInjection;
 
@@ -57,10 +67,15 @@ class Configuration implements ConfigurationInterface
                     ->info('Service implement TdBuilderInterface and return HTML <td>{content}</td>')
                     ->defaultValue('Zk2\SpsBundle\Model\TdBuilderService')
                     ->validate()
-                        ->ifTrue(function($v) {
-                            if (null === $v) return false;
-                            return !class_exists($v) or !is_subclass_of($v, 'Zk2\SpsBundle\Model\TdBuilderInterface');
-                        })->thenInvalid('%s must be instanceof TdBuilderInterface')
+                        ->ifTrue(
+                            function ($v) {
+                                if (null === $v) {
+                                    return false;
+                                }
+
+                                return !class_exists($v) or !is_subclass_of($v, 'Zk2\SpsBundle\Model\TdBuilderInterface');
+                            }
+                        )->thenInvalid('%s must be instanceof TdBuilderInterface')
                     ->end()
                 ->end()
                 ->scalarNode('session_key')

@@ -1,17 +1,29 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
+
 namespace Zk2\SpsBundle\Utils;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Zk2\SpsBundle\Model\DateRange;
 
 /**
- * Service serialized / unserialized form filter in the user's session
+ * Service serialize / unserialize form filter in the user's session
  */
 class FormFilterSerializer
 {
     /**
-     * @var Registry
+     * @var ManagerRegistry
      */
     private $doctrine;
 
@@ -21,12 +33,17 @@ class FormFilterSerializer
     private $session;
 
     /**
+     * @var EntityManagerInterface $entityManager
+     */
+    private $entityManager;
+
+    /**
      * Constructor
      *
-     * @param Registry $doctrine
-     * @param Session $session
+     * @param ManagerRegistry $doctrine
+     * @param Session         $session
      */
-    public function __construct(Registry $doctrine, Session $session)
+    public function __construct(ManagerRegistry $doctrine, Session $session)
     {
         $this->doctrine = $doctrine;
         $this->session = $session;
@@ -35,10 +52,11 @@ class FormFilterSerializer
     /**
      * serialize
      *
-     * @param array $data
+     * @param array  $data
      * @param string $filterName
+     * @param string $emName
      */
-    public function serialize($data, $filterName)
+    public function serialize($data, $filterName, $emName = 'default')
     {
         if ($data) {
             foreach ($data as $filedName => $field) {
@@ -46,10 +64,18 @@ class FormFilterSerializer
                     if ($field['name'] instanceof \DateTime) {
                         $data[$filedName]['name'] = $field['name']->format('Y-m-d');
                     } elseif ($field['name'] instanceof DateRange) {
-                        $data[$filedName]['name'] = 'DateRange :: ' . $field['name']->serialize();
+                        $data[$filedName]['name'] = 'DateRange :: '.$field['name']->serialize();
                     } else {
                         $entity = $field['name'];
-                        $data[$filedName]['name'] = sprintf("CLASS %s %u", get_class($entity), $entity->getId());
+                        $getIdentifier = 'getId';
+                        if (!method_exists($entity, $getIdentifier)) {
+                            $this->entityManager = $this->doctrine->getManager($emName);
+                            $identifier = $this->entityManager
+                                ->getClassMetadata(get_class($entity))
+                                ->getSingleIdentifierFieldName();
+                            $getIdentifier = sprintf('get%s', ucfirst($identifier));
+                        }
+                        $data[$filedName]['name'] = sprintf("CLASS %s %u", get_class($entity), $entity->$getIdentifier());
                     }
                 }
             }
@@ -67,13 +93,13 @@ class FormFilterSerializer
      */
     public function unserialize($filterName, $emName = 'default')
     {
-        $entity_manager = $this->doctrine->getManager($emName);
+        $this->entityManager = $this->doctrine->getManager($emName);
         $data = $this->session->get($filterName);
         foreach ($data as $filedName => $field) {
             $date = date_parse($field['name']);
             $output = [];
             if (preg_match("/^(CLASS)\s(.*)\s(\d+)$/", $field['name'], $output)) {
-                $entity = $entity_manager->find($output[2], $output[3]);
+                $entity = $this->entityManager->find($output[2], $output[3]);
                 if (is_object($entity)) {
                     $data[$filedName]['name'] = $entity;
                 } else {
@@ -84,7 +110,7 @@ class FormFilterSerializer
                 $dateRange = new DateRange();
                 $dateRange->unserialize($str);
                 $data[$filedName]['name'] = $dateRange;
-            } elseif ($date and checkdate($date["month"], $date["day"], $date["year"])) {
+            } elseif ($date and checkdate($date['month'], $date['day'], $date['year'])) {
                 $data[$filedName]['name'] = new \DateTime($field['name']);
             }
         }

@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\Filter;
 
@@ -10,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class StringFilterType
  */
-class StringFilterType extends BaseFilterType
+class StringFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -24,11 +34,11 @@ class StringFilterType extends BaseFilterType
             TextType::class,
             [
                 'required' => false,
-                'attr' => [
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-text-field',
+                'attr'     => [
+                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-text-field',
                     'data-index' => $options['level'],
                 ],
-                'label' => false,
+                'label'    => false,
             ]
         );
     }

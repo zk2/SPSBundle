@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\DataTransformer;
 
@@ -6,18 +16,17 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Zk2\SpsBundle\Model\DateRange;
 
-
 /**
  * Class DateRangeToArrayTransformer
  */
 class DateRangeToArrayTransformer implements DataTransformerInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function transform($dateRange)
     {
-        if ($dateRange === null) {
+        if (null === $dateRange) {
             return null;
         }
 
@@ -31,11 +40,11 @@ class DateRangeToArrayTransformer implements DataTransformerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function reverseTransform($array)
     {
-        if ($array === null) {
+        if (null === $array) {
             return null;
         }
 
@@ -49,5 +58,4 @@ class DateRangeToArrayTransformer implements DataTransformerInterface
 
         return $dateRange;
     }
-
 }

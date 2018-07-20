@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\Type;
 
@@ -19,7 +29,7 @@ class SpsType extends AbstractType
     {
         /** @var SpsFilterField $field */
         foreach ($options['array_fields'] as $field) {
-            for ($i = 0; $i < $field->getQuantity(); $i++) {
+            for ($i = 0; $i < $field->getQuantity(); $i ++) {
                 $builder->add(
                     sprintf("%s__%u", $field->getNameForFormClass(), $i),
                     $field->getFormClass(),
@@ -36,9 +46,9 @@ class SpsType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'error_bubbling' => false,
+                'error_bubbling'  => false,
                 'csrf_protection' => false,
-                'array_fields' => [],
+                'array_fields'    => [],
             ]
         );
     }

@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Utils;
 
@@ -10,28 +20,22 @@ use Zk2\SpsComponent\Condition\ConditionInterface;
 class ComparisonOperator
 {
     const COMPARISON_LABELS = [
-        ConditionInterface::TOKEN_CONTAINS => 'operator.contains',
-        ConditionInterface::TOKEN_BEGINS_WITH => 'operator.begins_with',
-        ConditionInterface::TOKEN_ENDS_WITH => 'operator.ends_with',
-        ConditionInterface::TOKEN_NOT_CONTAINS => 'operator.not_contains',
-        ConditionInterface::TOKEN_NOT_BEGINS_WITH => 'operator.not_begins_with',
-        ConditionInterface::TOKEN_NOT_ENDS_WITH => 'operator.not_ends_with',
-        ConditionInterface::TOKEN_EQUALS => 'operator.eq',
-        ConditionInterface::TOKEN_NOT_EQUALS => 'operator.not_eq',
-        ConditionInterface::TOKEN_GREATER_THAN => 'operator.greater',
+        ConditionInterface::TOKEN_CONTAINS              => 'operator.contains',
+        ConditionInterface::TOKEN_BEGINS_WITH           => 'operator.begins_with',
+        ConditionInterface::TOKEN_ENDS_WITH             => 'operator.ends_with',
+        ConditionInterface::TOKEN_NOT_CONTAINS          => 'operator.not_contains',
+        ConditionInterface::TOKEN_NOT_BEGINS_WITH       => 'operator.not_begins_with',
+        ConditionInterface::TOKEN_NOT_ENDS_WITH         => 'operator.not_ends_with',
+        ConditionInterface::TOKEN_EQUALS                => 'operator.eq',
+        ConditionInterface::TOKEN_NOT_EQUALS            => 'operator.not_eq',
+        ConditionInterface::TOKEN_GREATER_THAN          => 'operator.greater',
         ConditionInterface::TOKEN_GREATER_THAN_OR_EQUAL => 'operator.greater_eq',
-        ConditionInterface::TOKEN_LESS_THAN => 'operator.less',
-        ConditionInterface::TOKEN_LESS_THAN_OR_EQUAL => 'operator.less_eq',
-        ConditionInterface::TOKEN_IS_NULL => 'operator.is_empty',
-        ConditionInterface::TOKEN_IS_NOT_NULL => 'operator.is_not_empty',
-        ConditionInterface::TOKEN_BETWEEN => 'operator.between',
-        ConditionInterface::TOKEN_NOT_BETWEEN => 'operator.not_between',
-//        ConditionInterface::TOKEN_IN => ,
-//        ConditionInterface::TOKEN_NOT_IN => ,
-//        ConditionInterface::TOKEN_INSTANCE_OF => ,
-//        ConditionInterface::TOKEN_NOT_INSTANCE_OF => ,
-//        ConditionInterface::TOKEN_MATCHES => 'matches',
-//        ConditionInterface::TOKEN_NOT_MATCHES => 'not matches',
+        ConditionInterface::TOKEN_LESS_THAN             => 'operator.less',
+        ConditionInterface::TOKEN_LESS_THAN_OR_EQUAL    => 'operator.less_eq',
+        ConditionInterface::TOKEN_IS_NULL               => 'operator.is_empty',
+        ConditionInterface::TOKEN_IS_NOT_NULL           => 'operator.is_not_empty',
+        ConditionInterface::TOKEN_BETWEEN               => 'operator.between',
+        ConditionInterface::TOKEN_NOT_BETWEEN           => 'operator.not_between',
     ];
 
     /**
@@ -49,7 +53,7 @@ class ComparisonOperator
     {
         $array = [
             ConditionInterface::TOKEN_EQUALS,
-            ConditionInterface::TOKEN_NOT_EQUALS
+            ConditionInterface::TOKEN_NOT_EQUALS,
         ];
 
         return array_intersect(array_flip(self::COMPARISON_LABELS), $array);

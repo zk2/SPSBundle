@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Utils;
 
@@ -44,9 +54,10 @@ class Paginator implements \Countable, \IteratorAggregate
 
     /**
      * Paginator constructor.
+     *
      * @param QueryBuilderBridge $queryBuilder
-     * @param int $page
-     * @param int $numItemsPerPage
+     * @param int                $page
+     * @param int                $numItemsPerPage
      */
     public function __construct(QueryBuilderBridge $queryBuilder, $page = 1, $numItemsPerPage = 30)
     {
@@ -89,6 +100,7 @@ class Paginator implements \Countable, \IteratorAggregate
 
     /**
      * @param int $numItemsPerPage
+     *
      * @throws SpsException
      */
     public function setNumItemsPerPage($numItemsPerPage)
@@ -99,9 +111,12 @@ class Paginator implements \Countable, \IteratorAggregate
         $this->numItemsPerPage = $numItemsPerPage;
     }
 
+    /**
+     * @return int
+     */
     public function getCountPages()
     {
-        return (integer)ceil($this->count() / $this->numItemsPerPage);
+        return (int) ceil($this->count() / $this->numItemsPerPage);
     }
 
     /**
@@ -112,6 +127,9 @@ class Paginator implements \Countable, \IteratorAggregate
         $this->usedRoute = $usedRoute;
     }
 
+    /**
+     * @return string
+     */
     public function getUsedRoute()
     {
         return $this->usedRoute;
@@ -133,6 +151,9 @@ class Paginator implements \Countable, \IteratorAggregate
         $this->usedRouteParams = $usedRouteParams;
     }
 
+    /**
+     * @return array
+     */
     public function getPaginationData()
     {
         $pageCount = $this->getCountPages();
@@ -175,17 +196,17 @@ class Paginator implements \Countable, \IteratorAggregate
         }
 
         $viewData = [
-            'last' => $pageCount,
-            'current' => $current,
+            'last'            => $pageCount,
+            'current'         => $current,
             'numItemsPerPage' => $this->numItemsPerPage,
-            'first' => 1,
-            'pageCount' => $pageCount,
-            'totalCount' => $this->count(),
-            'pageRange' => $this->pageRange,
-            'startPage' => $startPage,
-            'endPage' => $endPage,
-            'previous' => null,
-            'next' => null,
+            'first'           => 1,
+            'pageCount'       => $pageCount,
+            'totalCount'      => $this->count(),
+            'pageRange'       => $this->pageRange,
+            'startPage'       => $startPage,
+            'endPage'         => $endPage,
+            'previous'        => null,
+            'next'            => null,
         ];
 
         if ($current - 1 > 0) {
@@ -205,9 +226,11 @@ class Paginator implements \Countable, \IteratorAggregate
 
     /**
      * Retrieve an external iterator
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     *
+     * @link  http://php.net/manual/en/iteratoraggregate.getiterator.php
+     *
+     * @return Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>
+     *
      * @since 5.0.0
      */
     public function getIterator()
@@ -220,9 +243,11 @@ class Paginator implements \Countable, \IteratorAggregate
 
     /**
      * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * The return value is cast to an integer.
+     *
+     * @link  http://php.net/manual/en/countable.count.php
+     *
+     * @return int The custom count as an integer. The return value is cast to an integer.
+     *
      * @since 5.1.0
      */
     public function count()

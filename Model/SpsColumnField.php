@@ -1,9 +1,22 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Model;
 
 use Zk2\SpsBundle\Exceptions\SpsException;
 
+/**
+ * Class SpsColumnField
+ */
 class SpsColumnField
 {
     /**
@@ -56,14 +69,15 @@ class SpsColumnField
      * @var array
      */
     protected $defaultAttr = [
-        'sort' => true,
+        'sort'    => true,
         'autosum' => null,
     ];
 
     /**
      * @param string $columnName
      * @param string $columnType
-     * @param array $attr
+     * @param array  $attr
+     *
      * @throws SpsException
      */
     public function __construct($columnName, $columnType, array $attr = [])
@@ -79,10 +93,10 @@ class SpsColumnField
         $this->alias = count($arr) === 2 ? $arr[0] : null;
         $this->field = count($arr) === 2 ? $arr[1] : $arr[0];
         $this->attr = array_merge($this->defaultAttr, $attr);
-        if ($this->columnType != 'numeric') {
+        if ('numeric' !== $this->columnType) {
             $this->attr['autosum'] = null;
         }
-        if ($this->columnType == 'boolean' and !isset($this->attr['boolean_view'])) {
+        if ('boolean' === $this->columnType && !isset($this->attr['boolean_view'])) {
             $this->attr['boolean_view'] = 'icon';
         }
     }
@@ -125,7 +139,6 @@ class SpsColumnField
     public function getLabel()
     {
         if (false === $this->getAttr('label')) {
-
             return null;
         }
 
@@ -141,9 +154,10 @@ class SpsColumnField
     }
 
     /**
-     * @param $name
+     * @param string      $name
      * @param string|null $subname
      * @param string|null $default
+     *
      * @return array|string|null
      */
     public function getAttr($name, $subname = null, $default = null)
@@ -208,6 +222,7 @@ class SpsColumnField
 
     /**
      * @param string $text
+     *
      * @return string
      */
     public function humanize($text)

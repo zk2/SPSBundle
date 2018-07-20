@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\Filter;
 
@@ -10,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 /**
  * Class BooleanFilterType
  */
-class BooleanFilterType extends BaseFilterType
+class BooleanFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -23,14 +33,14 @@ class BooleanFilterType extends BaseFilterType
             'name',
             ChoiceType::class,
             [
-                'required' => false,
-                'choices' => ['' => '', 'yes' => '1', 'no' => '0'],
+                'required'           => false,
+                'choices'            => ['' => '', 'yes' => '1', 'no' => '0'],
                 'translation_domain' => 'sps',
-                'attr' => [
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
+                'attr'               => [
+                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
                     'data-index' => $options['level'],
                 ],
-                'label' => false,
+                'label'              => false,
             ]
         );
     }
@@ -45,7 +55,7 @@ class BooleanFilterType extends BaseFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::eqNotEq(),
-                'choices' => [],
+                'choices'              => [],
             ]
         );
     }

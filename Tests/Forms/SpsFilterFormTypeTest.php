@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Tests\Forms;
 
@@ -7,8 +17,14 @@ use Tests\AbstractSpsTest;
 use Zk2\SpsBundle\Model\DateRange;
 use Zk2\SpsBundle\Model\SpsFilterField;
 
+/**
+ * Class SpsFilterFormTypeTest
+ */
 class SpsFilterFormTypeTest extends AbstractSpsTest
 {
+    /**
+     * testForm
+     */
     public function testForm()
     {
         $spsFilterFields = $this->getSpsFilterFields();
@@ -17,7 +33,7 @@ class SpsFilterFormTypeTest extends AbstractSpsTest
         $children = $form->createView()->children;
         /** @var SpsFilterField $field */
         foreach ($form->getConfig()->getOption('array_fields') as $field) {
-            for ($i = 0; $i < $field->getQuantity(); $i++) {
+            for ($i = 0; $i < $field->getQuantity(); $i ++) {
                 $this->assertArrayHasKey($field->getNameForFormClass().'__'.$i, $children);
             }
         }
@@ -31,9 +47,6 @@ class SpsFilterFormTypeTest extends AbstractSpsTest
         $form->submit($arrayData);
         $formData = $form->getData();
         $this->assertTrue($form->isSynchronized());
-//        $string = var_export($this->getErrorMessages($form), true);
-//        printf("%s\n", $string);
-//        exit;
         $this->assertTrue($form->isValid());
         $this->assertEquals($formData['country_name__0']['name'], 'Ukraine');
         $this->assertEquals($formData['country_lastDate__0']['name'], new \DateTime('2010-01-01'));
@@ -50,7 +63,8 @@ class SpsFilterFormTypeTest extends AbstractSpsTest
     }
 
     /**
-     * @param array SpsFilterField[]
+     * @param SpsFilterField[] $arrayFields
+     *
      * @return \Symfony\Component\Form\FormInterface
      */
     protected function createForm(array $arrayFields)
@@ -62,7 +76,13 @@ class SpsFilterFormTypeTest extends AbstractSpsTest
         );
     }
 
-    private function getErrorMessages(Form $form) {
+    /**
+     * @param Form $form
+     *
+     * @return array
+     */
+    private function getErrorMessages(Form $form)
+    {
         $errors = array();
 
         foreach ($form->getErrors() as $key => $error) {

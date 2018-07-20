@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Form\Filter;
 
@@ -10,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 /**
  * Class ChoiceFilterType
  */
-class ChoiceFilterType extends BaseFilterType
+class ChoiceFilterType extends AbstractFilterType
 {
     /**
      * {@inheritdoc}
@@ -24,12 +34,12 @@ class ChoiceFilterType extends BaseFilterType
             ChoiceType::class,
             [
                 'required' => false,
-                'choices' => $options['choices'],
-                'attr' => [
-                    'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
+                'choices'  => $options['choices'],
+                'attr'     => [
+                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
                     'data-index' => $options['level'],
                 ],
-                'label' => false,
+                'label'    => false,
             ]
         );
     }
@@ -44,7 +54,7 @@ class ChoiceFilterType extends BaseFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::eqNotEq(),
-                'choices' => [],
+                'choices'              => [],
             ]
         );
     }

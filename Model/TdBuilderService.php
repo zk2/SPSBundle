@@ -1,4 +1,14 @@
 <?php
+/**
+ * This file is part of the SpsBundle.
+ *
+ * (c) Evgeniy Budanov <budanov.ua@gmail.comm> 2017.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ *
+ */
 
 namespace Zk2\SpsBundle\Model;
 
@@ -65,7 +75,8 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param array $row
+     * @param array          $row
+     *
      * @return string
      */
     public function getTd(SpsColumnField $column, array $row)
@@ -78,10 +89,11 @@ class TdBuilderService implements TdBuilderInterface
     }
 
     /**
-     * @param array $autosum ,
+     * @param array            $autosum ,
      * @param SpsColumnField[] $columns
      *
      * @return string
+     *
      * @throws SpsException
      */
     public function getAutosum(array $autosum, array $columns)
@@ -89,7 +101,7 @@ class TdBuilderService implements TdBuilderInterface
         $row = '';
         foreach ($columns as $column) {
             if (!$column instanceof SpsColumnField) {
-                throw new SpsException('Array of columns must consist of elements '.SpsColumnField::class);
+                throw new SpsException(sprintf('Array of columns must consist of elements "%s', SpsColumnField::class));
             }
             $row .= sprintf(
                 "%s%s%s",
@@ -107,7 +119,8 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param string $type
+     * @param string         $type
+     *
      * @return string
      */
     protected function beginTd(SpsColumnField $column, $type = 'td')
@@ -122,20 +135,21 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param array $row
+     * @param array          $row
+     *
      * @return string
      */
     protected function buildTd(SpsColumnField $column, array $row)
     {
         $value = isset($row[$column->getName()]) ? $row[$column->getName()] : null;
 
-        if ($column->getType() == 'numeric') {
+        if ('numeric' === $column->getType()) {
             $value = $this->buildNumeric($column, $value);
-        } elseif ($column->getType() == 'datetime' and $value) {
+        } elseif ('datetime' === $column->getType() && $value) {
             $value = $this->buildDateTime($column, $value);
-        } elseif ($column->getType() == 'boolean') {
+        } elseif ('boolean' === $column->getType()) {
             $value = $this->buildBoolean($column, $value);
-        } elseif ($column->getType() == 'image' and $value) {
+        } elseif ('image' === $column->getType() && $value) {
             $value = $this->buildImage($column, $value);
         }
 
@@ -152,8 +166,10 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param $value
+     * @param string|int     $value
+     *
      * @return string
+     *
      * @throws SpsException
      */
     protected function buildNumeric(SpsColumnField $column, $value)
@@ -163,9 +179,9 @@ class TdBuilderService implements TdBuilderInterface
             throw new SpsException('Number format must be array');
         }
         if ($format) {
-            if (2 == count($format)) {
+            if (2 === count($format)) {
                 $value = number_format($value, $format[0], $format[1]);
-            } elseif (3 == count($format)) {
+            } elseif (3 === count($format)) {
                 $value = number_format($value, $format[0], $format[1], $format[2]);
             } else {
                 throw new SpsException('This array format accepts either zero, two, or three items');
@@ -176,9 +192,11 @@ class TdBuilderService implements TdBuilderInterface
     }
 
     /**
-     * @param SpsColumnField $column
-     * @param $value
+     * @param SpsColumnField   $column
+     * @param \DateTime|string $value
+     *
      * @return string
+     *
      * @throws SpsException
      */
     protected function buildDateTime(SpsColumnField $column, $value)
@@ -206,7 +224,8 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param $value
+     * @param string         $value
+     *
      * @return string
      */
     protected function buildBoolean(SpsColumnField $column, $value)
@@ -216,10 +235,10 @@ class TdBuilderService implements TdBuilderInterface
         } else {
             $totalStatus = $value ? 'check' : 'unchecked';
         }
-        if ($column->getAttr('boolean_view') == 'icon') {
+        if ('icon' === $column->getAttr('boolean_view')) {
             $value = sprintf('<i class="glyphicon glyphicon-%s"></i>', $totalStatus);
         } else {
-            $value = $totalStatus == 'unchecked'
+            $value = 'unchecked' === $totalStatus
                 ? $this->translator->trans('no', [], 'sps')
                 : $this->translator->trans('yes', [], 'sps');
         }
@@ -229,7 +248,8 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param $value
+     * @param string         $value
+     *
      * @return string
      */
     protected function buildImage(SpsColumnField $column, $value)
@@ -252,7 +272,6 @@ class TdBuilderService implements TdBuilderInterface
             $column->getAttr('image_width', null, 50),
             $column->getAttr('image_title', null, 'Icon'),
             $column->getAttr('image_alt', null, 'Icon')
-
         );
 
         return $value;
@@ -260,7 +279,8 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param $value
+     * @param string         $value
+     *
      * @return string
      */
     protected function buildFromChoice(SpsColumnField $column, $value)
@@ -274,8 +294,9 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param SpsColumnField $column
-     * @param $value
-     * @param $row
+     * @param string         $value
+     * @param array          $row
+     *
      * @return string
      */
     protected function buildLink(SpsColumnField $column, $value, $row)
@@ -313,6 +334,7 @@ class TdBuilderService implements TdBuilderInterface
 
     /**
      * @param string $type
+     *
      * @return string
      */
     protected function endTd($type = 'td')
