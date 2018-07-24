@@ -18,6 +18,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Symfony\Component\Form\Form;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Zk2\SpsBundle\Exceptions\SpsException;
 use Zk2\SpsBundle\Model\SpsColumnField;
 use Zk2\SpsComponent\Condition\ConditionInterface;
@@ -51,6 +52,8 @@ class QueryBuilderBridge
      *
      * @param SpsColumnField[]                 $columns
      * @param ORMQueryBuilder|DBALQueryBuilder $queryBuilder
+     *
+     * @throws \Zk2\SpsComponent\QueryBuilderException
      */
     public function __construct(array $columns, $queryBuilder)
     {
@@ -98,6 +101,8 @@ class QueryBuilderBridge
 
     /**
      * @return void
+     *
+     * @throws \Zk2\SpsComponent\Condition\ContainerException
      */
     public function buildQuery()
     {
@@ -109,14 +114,22 @@ class QueryBuilderBridge
      * @param array $orderBy
      *
      * @return QueryBuilderInterface
+     *
+     * @throws \Exception
      */
     public function addOrderBy(array $orderBy)
     {
         $ob = [];
         foreach ($orderBy as $field => $type) {
-            $column = $this->getColumnByFieldName($field);
-            $column->setSortType($type);
-            $ob[] = [$field, $type, $column->getAttr('sort_function')];
+            try {
+                $column = $this->getColumnByFieldName($field);
+                $column->setSortType($type);
+                $ob[] = [$field, $type, $column->getAttr('sort_function')];
+            } catch (SpsException $e) {
+                $ob[] = [$field, $type];
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
         $this->queryBuilder->buildOrderBy($ob);
 
@@ -136,6 +149,8 @@ class QueryBuilderBridge
      * @param int $offset
      *
      * @return array
+     *
+     * @throws SpsException
      */
     public function getResult($limit, $offset)
     {
@@ -159,6 +174,7 @@ class QueryBuilderBridge
                 $res = [];
                 foreach ($this->columns as $column) {
                     if (isset($from[$column->getAlias()])) {
+                        $this->isReadable($accessor, $result, $column->getField());
                         $res[$column->getName()] = $accessor->getValue($result, $column->getField());
                         if ($column->getAttr('link')) {
                             foreach ($column->getAttr('link', 'route_params', []) as $prop => $val) {
@@ -168,8 +184,10 @@ class QueryBuilderBridge
                             }
                         }
                     } elseif (isset($join[$column->getAlias()])) {
-                        $arr = explode('.', $join[$column->getAlias()]);
-                        if (isset($arr[1]) and $joinObj = $accessor->getValue($result, $arr[1])) {
+                        $joinObj = $this->getValue($join, $column->getAlias(), $result);
+                        //if ($joinObj instanceof \Doctrine\Common\Collections\Collection) {$joinObj = $joinObj->first();}
+                        if ($joinObj) {
+                            $this->isReadable($accessor, $joinObj, $column->getField());
                             $res[$column->getName()] = $accessor->getValue($joinObj, $column->getField());
                             if ($column->getAttr('link')) {
                                 foreach ($column->getAttr('link', 'route_params', []) as $prop => $val) {
@@ -192,6 +210,50 @@ class QueryBuilderBridge
         }
 
         return $results;
+    }
+
+    /**
+     * @param array  $join
+     * @param string $alias
+     * @param mixed  $result
+     *
+     * @return mixed|null
+     *
+     * @throws SpsException
+     */
+    private function getValue(array $join, string $alias, $result)
+    {
+        $arr = explode('.', $join[$alias]);
+
+        if (2 !== count($arr)) {
+            throw new SpsException(sprintf('Bad alias "%s"', $alias));
+        }
+
+        if (isset($join[$arr[0]])) {
+            $result = $this->getValue($join, $arr[0], $result);
+        }
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $this->isReadable($accessor, $result, $arr[1]);
+
+        return $accessor->getValue($result, $arr[1]);
+    }
+
+    /**
+     * @param PropertyAccessor $accessor
+     * @param mixed            $object
+     * @param string           $property
+     *
+     * @throws SpsException
+     */
+    private function isReadable(PropertyAccessor $accessor, $object, $property)
+    {
+        if (!$accessor->isReadable($object, $property)) {
+            throw new SpsException(
+                sprintf('Object "%s" don\'t has property "%s"', get_class($object), $property)
+            );
+        }
     }
 
     /**
