@@ -50,6 +50,7 @@ Available comparison operators
 There are ready-made sets
 -------------------------
     - ``Zk2\SpsBundle\Utils\ComparisonOperator::full()`` - get all operators
+    - ``Zk2\SpsBundle\Utils\ComparisonOperator::fullEqNotEq()`` - equals, not equals, is empty, is not empty
     - ``Zk2\SpsBundle\Utils\ComparisonOperator::eqNotEq()`` - equals, not equals
     - ``Zk2\SpsBundle\Utils\ComparisonOperator::fullText()`` - contains, equals, not equals, begins with, ends with, not contains, not begins with, not ends with, is empty, is not empty
     - ``Zk2\SpsBundle\Utils\ComparisonOperator::fullInt()`` - equals, not equals, less than, less than or equal, greater than, greater than or equal, is empty, is not empty

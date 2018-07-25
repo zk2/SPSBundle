@@ -62,6 +62,21 @@ class ComparisonOperator
     /**
      * @return array
      */
+    public static function fullEqNotEq()
+    {
+        $array = [
+            ConditionInterface::TOKEN_EQUALS,
+            ConditionInterface::TOKEN_NOT_EQUALS,
+            ConditionInterface::TOKEN_IS_NULL,
+            ConditionInterface::TOKEN_IS_NOT_NULL,
+        ];
+
+        return array_intersect(array_flip(self::COMPARISON_LABELS), $array);
+    }
+
+    /**
+     * @return array
+     */
     public static function fullText()
     {
         $array = [
