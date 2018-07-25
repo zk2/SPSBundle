@@ -273,7 +273,7 @@ class QueryBuilderBridge
             $comparisonOperator = $child->get('comparison_operator')->getData();
             $value = $child->get('name')->getData();
 
-            if (!in_array($comparisonOperator, [ConditionInterface::IS_NULL, ConditionInterface::IS_NOT_NULL])
+            if (!in_array($comparisonOperator, [ConditionInterface::TOKEN_IS_NULL, ConditionInterface::TOKEN_IS_NOT_NULL])
                 and !is_object($value)
                 and !strlen($value = trim($value))
             ) {
