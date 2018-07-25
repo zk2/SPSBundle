@@ -22,7 +22,7 @@
   "require": {
     "php": ">=7.1,<8.0",
     "symfony/symfony": ">=3.3, ~3.4",
-    "zk2/sps-component": "1.2.1"
+    "zk2/sps-component": "1.2.*"
   },
   "require-dev": {
     "phpunit/phpunit": "5.7.*",
