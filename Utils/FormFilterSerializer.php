@@ -111,7 +111,9 @@ class FormFilterSerializer
                 $dateRange->unserialize($str);
                 $data[$filedName]['name'] = $dateRange;
             } elseif ($date and checkdate($date['month'], $date['day'], $date['year'])) {
-                $data[$filedName]['name'] = new \DateTime($field['name']);
+                try {
+                    $data[$filedName]['name'] = new \DateTime($field['name']);
+                } catch (\Exception $e) {}
             }
         }
 
