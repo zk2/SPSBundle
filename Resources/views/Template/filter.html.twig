@@ -17,6 +17,7 @@
             <div id="collapse_sps" class="accordion-body collapse">
                 <div class="accordion-inner">
                     {{ form_start(form, {'attr': {'class':"form-inline"}}) }}
+                    <input type="hidden" id="global-errors-flag" value="{{ (app.session.flashbag.get('sps_filter_error')|first) ? 1 : 0 }}">
                     <table class="table table-condensed">
                         <tr>
                             {% set ind = 0 %}

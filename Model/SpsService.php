@@ -355,6 +355,9 @@ class SpsService
      * if there is a default filters-they are
      *
      * @return void
+     *
+     * @throws SpsException
+     * @throws \Zk2\SpsComponent\Condition\ContainerException
      */
     private function checkFilters()
     {
@@ -377,8 +380,11 @@ class SpsService
             } else {
                 $this->filterForm->handleRequest($this->request);
                 if ($this->filterForm->getErrors(true)->count()) {
-                    $this->session->getFlashBag()->add('error', 'The form of the filter contains errors...');
-                } elseif ($this->filterForm->isValid()) {
+                    $this->session->getFlashBag()->set('sps_filter_error', 'The form of the filter contains errors...');
+
+                    return;
+                }
+                if ($this->filterForm->isSubmitted() && $this->filterForm->isValid()) {
                     if ($this->sessionKey) {
                         $this->session->remove('_sps_pager_'.$this->sessionKey);
                         $this->formFilterSerializer->serialize(

@@ -37,5 +37,9 @@ $(function () {
         $(this).parent().parent().find('.sps-field-filter:first .img_add').show();
     });
 
+    if ($('#global-errors-flag').val() == 1) {
+        $('#sps_filter_collapse_sps').click();
+    }
+
     $('.zk-preview, .zk-split').popover();
 });
