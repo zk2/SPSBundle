@@ -21,8 +21,8 @@
   ],
   "require": {
     "php": ">=7.2",
-    "symfony/form": ">=4.1,<4.3",
-    "symfony/validator": ">=4.1,<4.3",
+    "symfony/form": "*",
+    "symfony/validator": "*",
     "zk2/sps-component": "1.2.*"
   },
   "require-dev": {
