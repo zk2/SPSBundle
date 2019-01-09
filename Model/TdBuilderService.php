@@ -13,7 +13,7 @@
 namespace Zk2\SpsBundle\Model;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Zk2\SpsBundle\Exceptions\SpsException;
 
 /**
@@ -78,6 +78,8 @@ class TdBuilderService implements TdBuilderInterface
      * @param array          $row
      *
      * @return string
+     *
+     * @throws SpsException
      */
     public function getTd(SpsColumnField $column, array $row)
     {
@@ -138,6 +140,8 @@ class TdBuilderService implements TdBuilderInterface
      * @param array          $row
      *
      * @return string
+     *
+     * @throws SpsException
      */
     protected function buildTd(SpsColumnField $column, array $row)
     {

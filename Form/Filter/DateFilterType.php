@@ -34,14 +34,14 @@ class DateFilterType extends AbstractFilterType
             'name',
             DateBootstrapType::class,
             [
-                'required'    => false,
+                'required' => false,
                 'constraints' => [new Date()],
-                'attr'        => [
-                    'readonly'   => 'readonly',
-                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-date-field',
+                'attr' => [
+                    'readonly' => 'readonly',
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-date-field',
                     'data-index' => $options['level'],
                 ],
-                'label'       => false,
+                'label' => false,
             ]
         );
     }
@@ -56,9 +56,9 @@ class DateFilterType extends AbstractFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::fullInt(),
-                'choices'              => [],
-                'model_timezone'       => date_default_timezone_get(),
-                'view_timezone'        => date_default_timezone_get(),
+                'choices' => [],
+                'model_timezone' => date_default_timezone_get(),
+                'view_timezone' => date_default_timezone_get(),
             ]
         );
     }

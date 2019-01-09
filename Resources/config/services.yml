@@ -1,5 +1,18 @@
 services:
 
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    Zk2\:
+        resource: '../../../zk2/Model/*,../../../zk2/Twig/*,../../../zk2/Utils/*'
+
+    # Aliases
+    Zk2\SpsBundle\Model\SpsService: '@zk2.sps'
+
     zk2.sps:
         class: Zk2\SpsBundle\Model\SpsService
         arguments:
@@ -22,7 +35,6 @@ services:
 
 
     # form type
-
     zk2.sps.date_bootstrap.type:
         class:  Zk2\SpsBundle\Form\Type\DateBootstrapType
         arguments: ['%locale%']

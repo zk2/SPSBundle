@@ -55,6 +55,8 @@ class FormFilterSerializer
      * @param array  $data
      * @param string $filterName
      * @param string $emName
+     *
+     * @throws \Doctrine\ORM\Mapping\MappingException
      */
     public function serialize($data, $filterName, $emName = 'default')
     {

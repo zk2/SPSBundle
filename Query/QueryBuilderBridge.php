@@ -86,7 +86,9 @@ class QueryBuilderBridge
             if (null === $key) {
                 throw new SpsException('Option sps_filter_field is not defined');
             }
-            $groupChild[$key][] = $child;
+            if (0 === $child->getErrors(true)->count()) {
+                $groupChild[$key][] = $child;
+            }
         }
 
         foreach ($groupChild as $children) {

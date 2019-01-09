@@ -34,20 +34,20 @@ class NumericFilterType extends AbstractFilterType
             'name',
             TextType::class,
             [
-                'required'    => false,
+                'required' => false,
                 'constraints' => [
                     new Type(
                         [
-                            'type'    => "numeric",
+                            'type' => "numeric",
                             'message' => "The value {{ value }} is not a valid {{ type }}.",
                         ]
                     ),
                 ],
-                'attr'        => [
-                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-numeric-field',
                     'data-index' => $options['level'],
                 ],
-                'label'       => false,
+                'label' => false,
             ]
         );
     }

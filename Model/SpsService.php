@@ -220,7 +220,7 @@ class SpsService
      *
      * @return SpsService
      *
-     * @throws SpsException
+     * @throws \Zk2\SpsComponent\QueryBuilderException
      */
     public function setQueryBuilder($queryBuilder)
     {
@@ -255,6 +255,8 @@ class SpsService
      * @param array  $attr
      *
      * @return SpsService
+     *
+     * @throws SpsException
      */
     public function addColumn($name, $type = 'string', array $attr = [])
     {
@@ -273,6 +275,8 @@ class SpsService
      * @param array  $attr
      *
      * @return SpsService
+     *
+     * @throws SpsException
      */
     public function addFilter($name, $type = 'string', array $attr = [])
     {
@@ -289,6 +293,10 @@ class SpsService
      * Build Result
      *
      * @return array
+     *
+     * @throws SpsException
+     * @throws \Zk2\SpsComponent\Condition\ContainerException
+     * @throws \Doctrine\ORM\Mapping\MappingException
      */
     public function buildResult()
     {
@@ -358,6 +366,7 @@ class SpsService
      *
      * @throws SpsException
      * @throws \Zk2\SpsComponent\Condition\ContainerException
+     * @throws \Doctrine\ORM\Mapping\MappingException
      */
     private function checkFilters()
     {
@@ -382,7 +391,7 @@ class SpsService
                 if ($this->filterForm->getErrors(true)->count()) {
                     $this->session->getFlashBag()->set('sps_filter_error', 'The form of the filter contains errors...');
 
-                    return;
+                    //return;
                 }
                 if ($this->filterForm->isSubmitted() && $this->filterForm->isValid()) {
                     if ($this->sessionKey) {
@@ -402,6 +411,8 @@ class SpsService
 
     /**
      * @return Paginator
+     *
+     * @throws \Exception
      */
     private function getPaginator()
     {

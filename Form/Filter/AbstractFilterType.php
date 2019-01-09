@@ -34,10 +34,10 @@ abstract class AbstractFilterType extends AbstractType
                 'boolean_operator',
                 ChoiceType::class,
                 [
-                    'choices'                   => ['boolean_operator.OR' => 'OR', 'boolean_operator.AND' => 'AND'],
+                    'choices' => ['boolean_operator.OR' => 'OR', 'boolean_operator.AND' => 'AND'],
                     'choice_translation_domain' => 'sps',
-                    'attr'                      => ['class' => 'zk2-sps-filter-boolean-operator'],
-                    'label'                     => false,
+                    'attr' => ['class' => 'zk2-sps-filter-boolean-operator'],
+                    'label' => false,
                 ]
             );
         }
@@ -47,10 +47,10 @@ abstract class AbstractFilterType extends AbstractType
                 'comparison_operator',
                 ChoiceType::class,
                 [
-                    'choices'                   => $options['comparison_operators'],
+                    'choices' => $options['comparison_operators'],
                     'choice_translation_domain' => 'sps',
-                    'attr'                      => ['class' => 'zk2-sps-filter-comparison-operator'],
-                    'label'                     => false,
+                    'attr' => ['class' => 'zk2-sps-filter-comparison-operator'],
+                    'label' => false,
                 ]
             );
         } else {
@@ -71,17 +71,17 @@ abstract class AbstractFilterType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'error_bubbling'             => false,
-                'quantity'                   => 1,
-                'comparison_operators'       => ComparisonOperator::full(),
+                'error_bubbling' => false,
+                'quantity' => 1,
+                'comparison_operators' => ComparisonOperator::full(),
                 'comparison_operator_hidden' => null,
-                'level'                      => 0,
-                'not_used'                   => false,
-                'sps_filter_name'            => null,
-                'sps_filter_type'            => null,
-                'sps_filter_field'           => null,
-                'sps_filter_function'        => null,
-                'function'                   => [],
+                'level' => 0,
+                'not_used' => false,
+                'sps_filter_name' => null,
+                'sps_filter_type' => null,
+                'sps_filter_field' => null,
+                'sps_filter_function' => null,
+                'function' => [],
             ]
         );
     }

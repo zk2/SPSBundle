@@ -33,14 +33,14 @@ class BooleanFilterType extends AbstractFilterType
             'name',
             ChoiceType::class,
             [
-                'required'           => false,
-                'choices'            => ['' => '', 'yes' => '1', 'no' => '0'],
+                'required' => false,
+                'choices' => ['' => '', 'yes' => '1', 'no' => '0'],
                 'translation_domain' => 'sps',
-                'attr'               => [
-                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-boolean-field',
                     'data-index' => $options['level'],
                 ],
-                'label'              => false,
+                'label' => false,
             ]
         );
     }
@@ -55,7 +55,7 @@ class BooleanFilterType extends AbstractFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::eqNotEq(),
-                'choices'              => [],
+                'choices' => [],
             ]
         );
     }

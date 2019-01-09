@@ -12,16 +12,16 @@ Bundle configuration in ``app/config/config.yml``
         templates:
 
             # Pagination template
-            pagination_template:  'Zk2SpsBundle:Template:pagination.html.twig'
+            pagination_template:  '@Zk2Sps/Template/pagination.html.twig'
 
             # Sortable template
-            sortable_template:    'Zk2SpsBundle:Template:sortable.html.twig'
+            sortable_template:    '@Zk2Sps/Template/sortable.html.twig'
 
             # Filter form template
-            filter_template:      'Zk2SpsBundle:Template:filter.html.twig'
+            filter_template:      '@Zk2Sps/Template/filter.html.twig'
 
             # General table template
-            table_template:       'Zk2SpsBundle:Template:table.html.twig'
+            table_template:       '@Zk2Sps/Template/table.html.twig'
 
         # Service to build HTML <td>{content}</td> (must implement TdBuilderInterface)
         td_builder_service_class: Zk2\SpsBundle\Model\TdBuilderService

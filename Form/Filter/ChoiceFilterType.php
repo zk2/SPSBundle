@@ -34,12 +34,12 @@ class ChoiceFilterType extends AbstractFilterType
             ChoiceType::class,
             [
                 'required' => false,
-                'choices'  => $options['choices'],
-                'attr'     => [
-                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
+                'choices' => $options['choices'],
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-choice-field',
                     'data-index' => $options['level'],
                 ],
-                'label'    => false,
+                'label' => false,
             ]
         );
     }
@@ -54,7 +54,7 @@ class ChoiceFilterType extends AbstractFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::eqNotEq(),
-                'choices'              => [],
+                'choices' => [],
             ]
         );
     }

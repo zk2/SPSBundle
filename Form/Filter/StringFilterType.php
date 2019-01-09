@@ -34,11 +34,11 @@ class StringFilterType extends AbstractFilterType
             TextType::class,
             [
                 'required' => false,
-                'attr'     => [
-                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-text-field',
+                'attr' => [
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-text-field',
                     'data-index' => $options['level'],
                 ],
-                'label'    => false,
+                'label' => false,
             ]
         );
     }

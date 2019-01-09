@@ -34,12 +34,12 @@ class DateRangeFilterType extends AbstractFilterType
             DateRangeBootstrapType::class,
             [
                 'required' => false,
-                'attr'     => [
-                    'readonly'   => 'readonly',
-                    'class'      => 'zk2-sps-filter-field zk2-sps-filter-date-field',
+                'attr' => [
+                    'readonly' => 'readonly',
+                    'class' => 'zk2-sps-filter-field zk2-sps-filter-date-field',
                     'data-index' => $options['level'],
                 ],
-                'label'    => false,
+                'label' => false,
             ]
         );
     }
@@ -54,9 +54,9 @@ class DateRangeFilterType extends AbstractFilterType
         $resolver->setDefaults(
             [
                 'comparison_operators' => ComparisonOperator::between(),
-                'choices'              => [],
-                'model_timezone'       => date_default_timezone_get(),
-                'view_timezone'        => date_default_timezone_get(),
+                'choices' => [],
+                'model_timezone' => date_default_timezone_get(),
+                'view_timezone' => date_default_timezone_get(),
             ]
         );
     }

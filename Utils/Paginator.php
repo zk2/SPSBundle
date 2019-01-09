@@ -232,6 +232,8 @@ class Paginator implements \Countable, \IteratorAggregate
      * @return Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>
      *
      * @since 5.0.0
+     *
+     * @throws SpsException
      */
     public function getIterator()
     {
