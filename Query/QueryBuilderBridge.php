@@ -305,7 +305,8 @@ class QueryBuilderBridge
                     'property' => $child->getConfig()->getOption('sps_filter_field'),
                     'comparisonOperator' => $child->get('comparison_operator')->getData(),
                     'value' => $value,
-                    'function' => $child->getConfig()->getOption('sps_filter_function'),
+                    'sql_function' => $child->getConfig()->getOption('sps_filter_sql_function'),
+                    'php_function' => $child->getConfig()->getOption('sps_filter_php_function'),
                 ],
             ];
             $collection[] = $condition;

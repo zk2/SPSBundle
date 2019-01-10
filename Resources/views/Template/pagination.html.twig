@@ -18,13 +18,13 @@
                         : (((totalCount % 10 >= 2) and (totalCount % 10 <= 4) and
                         ((totalCount % 100 < 10) or (totalCount % 100 >= 20))) ? 1 : 2) %}
                         {{ totalCount ~ ' ' }}
-                        {% transchoice totalCount with {'%cou%':cou} from "sps" %}paginator.results{% endtranschoice %}
+                        {% trans with {'%count%':totalCount, '%cou%':cou} from "sps" %}paginator.results{% endtrans %}
                         {% if totalCount > 0 %}
                             {% set cou2 = ((pageCount % 10 == 1) and (pageCount % 100 != 11)) ? 0 :
                             (((pageCount % 10 >= 2) and (pageCount % 10 <= 4) and
                             ((pageCount % 100 < 10) or (pageCount % 100 >= 20))) ? 1 : 2) %}
                             {{ pageCount ~ ' ' }}
-                            {% transchoice pageCount with {'%cou2%':cou2} from "sps" %}paginator.items{% endtranschoice %}
+                            {% trans with {'%count%':pageCount, '%cou2%':cou2} from "sps" %}paginator.items{% endtrans %}
                         {% endif %}
                     </span>
             </li>

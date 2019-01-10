@@ -67,9 +67,13 @@ class SpsFilterField
                 sprintf("Filter's type \"%s\" is not valid. Use %s", $filterType, implode(' or ', $this->filterTypes))
             );
         }
-        if (isset($attr['function'])) {
-            $attr['sps_filter_function'] = $attr['function'];
-            unset($attr['function']);
+        if (isset($attr['sql_function'])) {
+            $attr['sps_filter_sql_function'] = $attr['sql_function'];
+            unset($attr['sql_function']);
+        }
+        if (isset($attr['php_function'])) {
+            $attr['sps_filter_php_function'] = $attr['php_function'];
+            unset($attr['php_function']);
         }
         $this->filterName = $filterName;
         $this->filterType = $filterType;

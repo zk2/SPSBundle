@@ -80,8 +80,9 @@ abstract class AbstractFilterType extends AbstractType
                 'sps_filter_name' => null,
                 'sps_filter_type' => null,
                 'sps_filter_field' => null,
-                'sps_filter_function' => null,
-                'function' => [],
+                'sps_filter_sql_function' => null,
+                'sps_filter_php_function' => null,
+                //'function' => [],
             ]
         );
     }
