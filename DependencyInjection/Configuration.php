@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('full_path_to_web_root')
                     ->info('Full path to web-root directory')
-                    ->defaultValue('%kernel.root_dir%/../web')
+                    ->defaultValue('%kernel.project_dir%/public')
                 ->end()
                 ->scalarNode('td_builder_service_class')
                     ->info('Service implement TdBuilderInterface and return HTML <td>{content}</td>')
