@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('zk2_sps');
-        $rootNode = $treeBuilder->root('zk2_sps');
+        $rootNode = $treeBuilder->getRootNode();
         $sessionKeys = ['by_route', 'by_query', null];
 
         $rootNode

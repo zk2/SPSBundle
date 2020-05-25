@@ -98,7 +98,7 @@ class FormFilterSerializer
         $this->entityManager = $this->doctrine->getManager($emName);
         $data = $this->session->get($filterName);
         foreach ($data as $filedName => $field) {
-            $date = date_parse($field['name']);
+            //$date = date_parse($field['name']);
             $output = [];
             if (preg_match("/^(CLASS)\s(.*)\s(\d+)$/", $field['name'], $output)) {
                 $entity = $this->entityManager->find($output[2], $output[3]);
@@ -112,11 +112,11 @@ class FormFilterSerializer
                 $dateRange = new DateRange();
                 $dateRange->unserialize($str);
                 $data[$filedName]['name'] = $dateRange;
-            } elseif ($date and checkdate($date['month'], $date['day'], $date['year'])) {
+            }/* elseif ($date and checkdate($date['month'], $date['day'], $date['year'])) {
                 try {
                     $data[$filedName]['name'] = new \DateTime($field['name']);
                 } catch (\Exception $e) {}
-            }
+            }*/
         }
 
         return $data;

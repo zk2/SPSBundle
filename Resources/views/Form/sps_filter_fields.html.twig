@@ -5,7 +5,7 @@
     {% for key,val in SpsDateSetting %}
         {% set json = json|merge([key ~ ':' ~ val]) %}
     {% endfor %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="input-group-sm date zk2-sps-filter-date" id="{{ id }}_d">
             {{ block('form_widget_simple') }}
             <span class="input-group-addon">
@@ -18,7 +18,7 @@
             }
             filterDateParameters['{{ id }}_d'] = { {{ (json|join(','))|raw }} };
         </script>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block zk2_sps_date_range_bootstrap_type_widget %}
@@ -26,7 +26,7 @@
     {% for key,val in SpsDateSetting %}
         {% set json = json|merge([key ~ ':' ~ val]) %}
     {% endfor %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div style="display: inline-block;">
             <div class="input-daterange input-group-sm date zk2-sps-filter-date" id="{{ id }}_d">
                 {{ form_widget(form.start) }}
@@ -40,11 +40,11 @@
             }
             filterDateParameters['{{ id }}_d'] = { {{ (json|join(','))|raw }} };
         </script>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block zk2_sps_form_and_errors_widget_simple %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% set err_mess = null %}
         <div class="sps-field-filter">
             {% for child in form %}
@@ -66,11 +66,11 @@
                 <div class="sps-child-filter-error-mess">{{ err_mess }}</div>
             {% endif %}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block zk2_sps_form_widget_simple %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="sps-field-filter">
             {% for child in form %}
                 <div class="input-group-sm sps-child-filter">
@@ -78,7 +78,7 @@
                 </div>
             {% endfor %}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {% block zk2_sps_date_filter_type_widget %}

@@ -294,10 +294,10 @@ class QueryBuilderBridge
                     $start instanceof \DateTime ? $start->format('Y-m-d') : null,
                     $end instanceof \DateTime ? $end->format('Y-m-d') : null,
                 ];
-            } elseif ('date' === $formFieldType) {
+            } /*elseif ('date' === $formFieldType) {
                 $start = $child->get('name')->getData();
                 $value = $start instanceof \DateTime ? $start->format('Y-m-d') : null;
-            }
+            }*/
 
             $condition = [
                 'andOrOperator' => $child->has('boolean_operator') ? $child->get('boolean_operator')->getData() : null,

@@ -12,8 +12,9 @@
 
 namespace Zk2\SpsBundle\Twig\Extension;
 
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+use Twig\Environment;
 use Zk2\SpsBundle\Exceptions\SpsException;
 use Zk2\SpsBundle\Model\SpsColumnField;
 use Zk2\SpsBundle\Model\TdBuilderInterface;
@@ -22,7 +23,7 @@ use Zk2\SpsBundle\Utils\Paginator;
 /**
  * Class that extends the Twig_Extension
  */
-class SpsExtension extends Twig_Extension
+class SpsExtension extends AbstractExtension
 {
     /**
      * @var TdBuilderInterface|null
@@ -51,35 +52,34 @@ class SpsExtension extends Twig_Extension
      */
     public function getFunctions()
     {
-        /** @noinspection PhpUndefinedClassInspection */
         if ($this->tdService) {
             return [
-                new Twig_SimpleFunction(
+                new TwigFunction(
                     'sps_filter_form',
                     [$this, 'filter'],
                     ['is_safe' => ['html'], 'needs_environment' => true]
                 ),
-                new Twig_SimpleFunction(
+                new TwigFunction(
                     'sps_build_td',
                     [$this, 'td'],
                     ['is_safe' => ['html'], 'needs_environment' => false]
                 ),
-                new Twig_SimpleFunction(
+                new TwigFunction(
                     'sps_pagination_sortable',
                     [$this, 'sortable'],
                     ['is_safe' => ['html'], 'needs_environment' => true]
                 ),
-                new Twig_SimpleFunction(
+                new TwigFunction(
                     'sps_pagination_pagination',
                     [$this, 'pagination'],
                     ['is_safe' => ['html'], 'needs_environment' => true]
                 ),
-                new Twig_SimpleFunction(
+                new TwigFunction(
                     'sps_filter_table',
                     [$this, 'table'],
                     ['is_safe' => ['html'], 'needs_environment' => true]
                 ),
-                new Twig_SimpleFunction(
+                new TwigFunction(
                     'sps_build_autosum',
                     [$this, 'autosum'],
                     ['is_safe' => ['html'], 'needs_environment' => false]
@@ -125,13 +125,13 @@ class SpsExtension extends Twig_Extension
     }
 
     /**
-     * @param \Twig_Environment $env
-     * @param array             $filter
-     * @param int               $colspan
+     * @param Environment $env
+     * @param array       $filter
+     * @param int         $colspan
      *
      * @return string
      */
-    public function filter(\Twig_Environment $env, array $filter, $colspan = 2)
+    public function filter(Environment $env, array $filter, $colspan = 2)
     {
         return $env->render(
             $this->options['filter_template'],
@@ -140,14 +140,14 @@ class SpsExtension extends Twig_Extension
     }
 
     /**
-     * @param \Twig_Environment $env
-     * @param SpsColumnField    $column
-     * @param array             $usedRoute
-     * @param array             $usedRouteParams
+     * @param Environment    $env
+     * @param SpsColumnField $column
+     * @param array          $usedRoute
+     * @param array          $usedRouteParams
      *
      * @return string
      */
-    public function sortable(\Twig_Environment $env, SpsColumnField $column, $usedRoute, array $usedRouteParams)
+    public function sortable(Environment $env, SpsColumnField $column, $usedRoute, array $usedRouteParams)
     {
         return $env->render(
             $this->options['sortable_template'],
@@ -156,12 +156,12 @@ class SpsExtension extends Twig_Extension
     }
 
     /**
-     * @param \Twig_Environment $env
-     * @param Paginator         $paginator
+     * @param Environment $env
+     * @param Paginator   $paginator
      *
      * @return string
      */
-    public function pagination(\Twig_Environment $env, Paginator $paginator)
+    public function pagination(Environment $env, Paginator $paginator)
     {
         return $env->render(
             $this->options['pagination_template'],
@@ -170,13 +170,13 @@ class SpsExtension extends Twig_Extension
     }
 
     /**
-     * @param \Twig_Environment $env
-     * @param Paginator         $paginator
-     * @param array             $autosum
+     * @param Environment $env
+     * @param Paginator   $paginator
+     * @param array       $autosum
      *
      * @return string
      */
-    public function table(\Twig_Environment $env, Paginator $paginator, array $autosum = [])
+    public function table(Environment $env, Paginator $paginator, array $autosum = [])
     {
         return $env->render(
             $this->options['table_template'],

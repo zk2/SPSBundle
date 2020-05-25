@@ -42,6 +42,7 @@ class DateFilterType extends AbstractFilterType
                     'data-index' => $options['level'],
                 ],
                 'label' => false,
+                'input' => 'string',
             ]
         );
     }
