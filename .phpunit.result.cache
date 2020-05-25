@@ -1,1 +1,1 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":230:{a:2:{s:7:"defects";a:1:{s:43:"Tests\Forms\SpsFilterFormTypeTest::testForm";i:3;}s:5:"times";a:2:{s:43:"Tests\Forms\SpsFilterFormTypeTest::testForm";d:0.032;s:56:"Tests\Query\QueryBuilderTest::testConditionsQueryBuilder";d:0.006;}}}
+C:37:"PHPUnit\Runner\DefaultTestResultCache":230:{a:2:{s:7:"defects";a:1:{s:43:"Tests\Forms\SpsFilterFormTypeTest::testForm";i:3;}s:5:"times";a:2:{s:43:"Tests\Forms\SpsFilterFormTypeTest::testForm";d:0.077;s:56:"Tests\Query\QueryBuilderTest::testConditionsQueryBuilder";d:0.013;}}}
