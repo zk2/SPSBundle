@@ -37,13 +37,13 @@ services:
     # form type
     zk2.sps.date_bootstrap.type:
         class:  Zk2\SpsBundle\Form\Type\DateBootstrapType
-        arguments: ['%locale%']
+        arguments: ['%kernel.default_locale%']
         tags:
             - { name: form.type, alias: zk2_sps_date_bootstrap_type }
 
     zk2.sps.date_range_bootstrap.type:
         class:  Zk2\SpsBundle\Form\Type\DateRangeBootstrapType
-        arguments: ['%locale%', true]
+        arguments: ['%kernel.default_locale%', true]
         tags:
             - { name: form.type, alias: zk2_sps_date_range_bootstrap_type }
 
