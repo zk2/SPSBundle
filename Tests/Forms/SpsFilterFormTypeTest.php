@@ -49,7 +49,7 @@ class SpsFilterFormTypeTest extends AbstractSpsTest
         $this->assertTrue($form->isSynchronized());
         $this->assertTrue($form->isValid());
         $this->assertEquals($formData['country_name__0']['name'], 'Ukraine');
-        $this->assertEquals($formData['country_lastDate__0']['name'], new \DateTime('2010-01-01'));
+        $this->assertEquals($formData['country_lastDate__0']['name'], '2010-01-01');
         $this->assertInstanceOf(DateRange::class, $formData['country_date__0']['name']);
 
         $form = $this->createForm($spsFilterFields);
