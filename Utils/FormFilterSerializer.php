@@ -12,7 +12,7 @@
 
 namespace Zk2\SpsBundle\Utils;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Zk2\SpsBundle\Model\DateRange;
