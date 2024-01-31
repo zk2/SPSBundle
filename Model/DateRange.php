@@ -12,10 +12,12 @@
 
 namespace Zk2\SpsBundle\Model;
 
+use DateTimeInterface;
+
 /**
  * Class DateRange
  */
-class DateRange implements \Serializable
+class DateRange
 {
     /**
      * @var \DateTime
@@ -91,8 +93,8 @@ class DateRange implements \Serializable
     public function serialize()
     {
         $data = [
-            ($this->start ? $this->start->format(\DateTime::ATOM) : null),
-            ($this->end ? $this->end->format(\DateTime::ATOM) : null),
+            ($this->start ? $this->start->format(DateTimeInterface::ATOM) : null),
+            ($this->end ? $this->end->format(DateTimeInterface::ATOM) : null),
         ];
 
         return serialize($data);
@@ -104,12 +106,12 @@ class DateRange implements \Serializable
     public function unserialize($data)
     {
         $data = unserialize($data);
-        list($this->start, $this->end) = $data;
+        [$this->start, $this->end] = $data;
         if ($this->start) {
-            $this->start = \DateTime::createFromFormat(\DateTime::ATOM, $this->start);
+            $this->start = \DateTime::createFromFormat(DateTimeInterface::ATOM, $this->start);
         }
         if ($this->end) {
-            $this->end = \DateTime::createFromFormat(\DateTime::ATOM, $this->end);
+            $this->end = \DateTime::createFromFormat(DateTimeInterface::ATOM, $this->end);
         }
     }
 }

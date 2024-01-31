@@ -14,7 +14,7 @@ namespace Zk2\SpsBundle\Model;
 
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
 use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,7 +94,7 @@ class SpsService
     protected $formFactory;
 
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     protected $router;
 
@@ -131,11 +131,11 @@ class SpsService
     /**
      * @param RequestStack         $request
      * @param FormFactory          $formFactory
-     * @param Router               $router
+     * @param UrlGeneratorInterface $router
      * @param FormFilterSerializer $formFilterSerializer
      * @param string|null          $sessionKeyType
      */
-    public function __construct(RequestStack $request, FormFactory $formFactory, Router $router, FormFilterSerializer $formFilterSerializer, $sessionKeyType)
+    public function __construct(RequestStack $request, FormFactory $formFactory, UrlGeneratorInterface $router, FormFilterSerializer $formFilterSerializer, $sessionKeyType)
     {
         $this->request = $request->getCurrentRequest();
         $this->session = $this->request->getSession();

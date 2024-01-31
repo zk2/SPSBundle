@@ -32,7 +32,6 @@ class TwigExtensionCompilerPass implements CompilerPassInterface
             return;
         }
 
-        /** @var TdBuilderInterface $serviceClass */
         $serviceClass = $container->getParameter('zk2_sps.td_builder_service_class');
 
         $tdBuilderService = new Definition($serviceClass);
@@ -44,6 +43,7 @@ class TwigExtensionCompilerPass implements CompilerPassInterface
             );
         }
 
+        /** @var TdBuilderInterface $serviceClass */
         foreach ($serviceClass::getInjections() as $setter => $service) {
             $tdBuilderService->addMethodCall($setter, [new Reference($service)]);
         }

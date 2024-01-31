@@ -24,7 +24,7 @@ class DateRangeToArrayTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($dateRange)
+    public function transform($dateRange): mixed
     {
         if (null === $dateRange) {
             return null;
@@ -42,7 +42,7 @@ class DateRangeToArrayTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function reverseTransform($array)
+    public function reverseTransform($array): mixed
     {
         if (null === $array) {
             return null;

@@ -12,7 +12,7 @@
 
 namespace Zk2\SpsBundle\Model;
 
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Zk2\SpsBundle\Exceptions\SpsException;
 
@@ -27,7 +27,7 @@ class TdBuilderService implements TdBuilderInterface
     protected $td;
 
     /**
-     * @var Router
+     * @var UrlGeneratorInterface
      */
     protected $router;
 
@@ -58,9 +58,9 @@ class TdBuilderService implements TdBuilderInterface
     }
 
     /**
-     * @param Router $router
+     * @param UrlGeneratorInterface $router
      */
-    public function setRouter(Router $router)
+    public function setRouter(UrlGeneratorInterface $router)
     {
         $this->router = $router;
     }

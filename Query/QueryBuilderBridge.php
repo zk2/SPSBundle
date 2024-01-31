@@ -277,7 +277,7 @@ class QueryBuilderBridge
 
             if (!in_array($comparisonOperator, [ConditionInterface::TOKEN_IS_NULL, ConditionInterface::TOKEN_IS_NOT_NULL])
                 and !is_object($value)
-                and !strlen($value = trim($value))
+                and !strlen($value = trim($value ?? ''))
             ) {
                 continue;
             }
